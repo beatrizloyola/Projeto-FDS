@@ -1,6 +1,6 @@
-# FitBuddy
+# Treinaí
 
-FitBuddy é uma aplicação web baseada em Python com Django para acompanhamento de treinos em desenvolvimento por estudantes da disciplina de Fundamentos de Desenvolvimento de Software da CESAR School.
+Treinaí é uma aplicação web baseada em Python com Django para acompanhamento de treinos em desenvolvimento por estudantes da disciplina de Fundamentos de Desenvolvimento de Software da CESAR School.
 
 ## Membros
 
