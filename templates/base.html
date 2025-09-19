@@ -7,14 +7,13 @@
 <body>
     <header>
         <h1>Treinaí</h1>
-        <nav>
-            <a href="/">Home</a>
-            {% if user.is_authenticated %}
-                <a href="/logout/">Sair</a>
-            {% else %}
-                <a href="/login/">Login</a>
-            {% endif %}
-        </nav>
+        {% if not request.resolver_match.url_name == 'login' %}
+            <nav>
+                <a href="/treinos/">Treinos</a>
+                <a href="/medalhas/">Medalhas</a>
+                <a href="/perfil/atividade/">Perfil</a>
+            </nav>
+        {% endif %}
     </header>
 
     <main>
