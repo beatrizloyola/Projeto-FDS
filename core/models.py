@@ -2,9 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-class User(AbstractUser):
-    bio = models.TextField(blank=True, null=True)
-    birth_date = models.DateField(blank=True, null=True)
-
-    def __str__(self):
-        return self.username
+class CustomUser(AbstractUser):
+    data_nascimento = models.DateField(null=True, blank=True)
+    altura = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    peso = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
