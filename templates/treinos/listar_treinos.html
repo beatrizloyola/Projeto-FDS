@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Treinos{% endblock %}
+
+{% block content %}
+<h2>Página de Treinos</h2>
+
+{% if treinos %}
+    <ul>
+        {% for treino in treinos %}
+            <li>
+                <strong>{{ treino.nome }}</strong>
+                <a href="{% url 'editar_treino' treino.id %}">Editar</a> |
+                <a href="{% url 'excluir_treino' treino.id %}">Excluir</a>
+                <ul>
+                    {% for item in treino.itens.all %}
+                        <li>
+                            {{ item.exercicio.nome }} - {{ item.carga }}kg - {{ item.repeticoes }} rep - {{ item.descanso }}s
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Você ainda não tem treinos cadastrados.</p>
+    <a href="{% url 'criar_treino' %}" class="btn btn-primary">+ Criar treino</a>
+{% endif %}
+
+{% endblock %}

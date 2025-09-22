@@ -1,0 +1,8 @@
+<h2>Excluir Treino</h2>
+<p>Tem certeza que deseja excluir o treino <strong>{{ treino.nome }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sim, excluir</button>
+    <a href="{% url 'treinos' %}">Cancelar</a>
+</form>

@@ -4,5 +4,13 @@
 
 {% block content %}
 <h2>Página de Treinos</h2>
-<p>Conteúdo da página de treinos...</p>
+
+{% for treino in treinos %}
+    <p>{{ treino.nome }}</p>
+    {% if treino.id %}
+        <a href="{% url 'editar_treino' treino.id %}">Editar</a>
+        <a href="{% url 'excluir_treino' treino.id %}">Excluir</a>
+    {% endif %}
+{% endfor %}
+
 {% endblock %}

@@ -1,0 +1,27 @@
+<h2>Editar Treino</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Nome do Treino:</label>
+    <input type="text" name="nome" value="{{ treino.nome }}" required>
+
+    <h3>Exercícios</h3>
+    <div id="exercicios">
+        {% for item in treino.itens.all %}
+            <div>
+                <select name="exercicio">
+                    {% for exercicio in exercicios %}
+                        <option value="{{ exercicio.id }}" {% if exercicio.id == item.exercicio.id %}selected{% endif %}>
+                            {{ exercicio.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="carga" value="{{ item.carga }}" placeholder="Carga (kg)">
+                <input type="number" name="repeticoes" value="{{ item.repeticoes }}" placeholder="Repetições">
+                <input type="number" name="descanso" value="{{ item.descanso }}" placeholder="Descanso (s)">
+            </div>
+        {% endfor %}
+    </div>
+
+    <button type="submit">Salvar Alterações</button>
+</form>

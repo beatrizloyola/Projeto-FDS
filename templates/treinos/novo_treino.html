@@ -1,0 +1,38 @@
+<h2>Criar Treino</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="nome">Nome do treino:</label>
+    <input type="text" name="nome" id="nome" required><br><br>
+
+    <div id="exercicios-container">
+        <div class="exercicio">
+            <label>Exercício:</label>
+            <select name="exercicio[]" required>
+                {% for exercicio in exercicios %}
+                    <option value="{{ exercicio.id }}">{{ exercicio.nome }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Carga:</label>
+            <input type="number" name="carga[]" required>
+
+            <label>Repetições:</label>
+            <input type="number" name="repeticoes[]" required>
+
+            <label>Descanso:</label>
+            <input type="number" name="descanso[]" required>
+        </div>
+    </div>
+
+    <button type="button" onclick="addExercicio()">+ Adicionar exercício</button>
+    <br><br>
+    <button type="submit">Salvar Treino</button>
+</form>
+
+<script>
+function addExercicio() {
+    const container = document.getElementById("exercicios-container");
+    const novo = container.firstElementChild.cloneNode(true);
+    container.appendChild(novo);
+}
+</script>
