@@ -11,7 +11,9 @@
             <li>
                 <strong>{{ treino.nome }}</strong>
                 <a href="{% url 'editar_treino' treino.id %}">Editar</a> |
-                <a href="{% url 'excluir_treino' treino.id %}">Excluir</a>
+                <a href="{% url 'excluir_treino' treino.id %}">Excluir</a> |
+                <a href="{% url 'concluir_treino' treino.id %}" style="color:green; font-weight:bold;">Concluir Treino</a>
+
                 <ul>
                     {% for item in treino.itens.all %}
                         <li>
