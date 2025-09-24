@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Treino, Exercicio, TreinoExercicio
+from perfil.models import Atividade
+from django.contrib import messages
 
 @login_required
 def treinos_view(request):
@@ -81,3 +83,17 @@ def excluir_treino_view(request, treino_id):
 def listar_treinos_view(request):
     treinos = Treino.objects.filter(usuario=request.user)
     return render(request, "treinos/listar_treinos.html", {"treinos": treinos})
+
+@login_required
+def concluir_treino_view(request, treino_id):
+    treino = get_object_or_404(Treino, id=treino_id, usuario=request.user)
+
+    # Se o método for POST, o usuário confirmou no formulário
+    if request.method == 'POST':
+        Atividade.objects.create(usuario=request.user, treino=treino)
+        messages.success(request, f"Parabéns! O treino '{treino.nome}' foi registrado no seu perfil.")
+        # Redireciona para a página de perfil (ou para onde fizer sentido)
+        return redirect('treinos')
+
+    # Se o método for GET, apenas mostre a página de confirmação
+    return render(request, 'treinos/confirmar_conclusao.html', {'treino': treino})

@@ -1,0 +1,10 @@
+{% extends "base.html" %} {% block content %}
+  <h2>Confirmar Conclusão de Treino</h2>
+  <p>Você tem certeza que concluiu o treino <strong>"{{ treino.nome }}"</strong> e deseja registrá-lo em suas atividades?</p>
+
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">Sim, eu concluí!</button>
+    <a href="{% url 'treinos' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}
