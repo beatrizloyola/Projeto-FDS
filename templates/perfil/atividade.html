@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-
 {% block title %}Perfil - Atividade{% endblock %}
-
 {% block content %}
 <h2>Perfil</h2>
 <nav>
@@ -9,5 +7,17 @@
     <a href="{% url 'usuario' %}">Usuário</a>
 </nav>
 
-<p>Conteúdo da página de Atividade...</p>
+<h3>Meu Histórico de Atividades</h3>
+
+{% if atividades %}
+    <ul>
+        {% for atividade in atividades %}
+            <li>
+                Você concluiu o treino <strong>"{{ atividade.treino.nome }}"</strong> em {{ atividade.data_conclusao|date:"d/m/Y \à\s H:i" }}.
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Você ainda não registrou nenhum treino concluído. Vá para a página de <a href="{% url 'treinos' %}">treinos</a> e finalize um!</p>
+{% endif %}
 {% endblock %}
