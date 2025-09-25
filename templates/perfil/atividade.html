@@ -1,23 +1,195 @@
-{% extends "base.html" %}
-{% block title %}Perfil - Atividade{% endblock %}
+{% extends 'base.html' %}
+
 {% block content %}
-<h2>Perfil</h2>
-<nav>
-    <a href="{% url 'atividade' %}">Atividade</a>
-    <a href="{% url 'usuario' %}">Usuário</a>
-</nav>
+<div class="container">
 
-<h3>Meu Histórico de Atividades</h3>
 
-{% if atividades %}
-    <ul>
-        {% for atividade in atividades %}
-            <li>
-                Você concluiu o treino <strong>"{{ atividade.treino.nome }}"</strong> em {{ atividade.data_conclusao|date:"d/m/Y \à\s H:i" }}.
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Você ainda não registrou nenhum treino concluído. Vá para a página de <a href="{% url 'treinos' %}">treinos</a> e finalize um!</p>
-{% endif %}
+  <h2 class="titulo">Atividade</h2>
+
+
+  <div class="grafico-box">
+    <h3>Dias Treinados</h3>
+    <img src="{% static 'img/grafico_exemplo.png' %}" alt="Gráfico de treinos" class="grafico-img">
+    <div class="filtros">
+      <label><input type="checkbox" name="mensal"> Mensal</label>
+      <label><input type="checkbox" name="anual"> Anual</label>
+    </div>
+  </div>
+
+  <!-- ====== ÁREA OBJETIVO + IMC ====== -->
+  <div class="painel">
+    <!-- Objetivo -->
+    <div class="objetivo-box">
+      <h3>Objetivo</h3>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="acao" value="atualizar_objetivo">
+
+        <div class="objetivo-opcoes">
+          <label class="objetivo-item {% if perfil.objetivo == 'GANHO' %}ativo{% endif %}">
+            <input type="radio" name="objetivo" value="GANHO" {% if perfil.objetivo == 'GANHO' %}checked{% endif %}>
+            Ganhar massa magra
+          </label>
+
+          <label class="objetivo-item {% if perfil.objetivo == 'PERDA' %}ativo{% endif %}">
+            <input type="radio" name="objetivo" value="PERDA" {% if perfil.objetivo == 'PERDA' %}checked{% endif %}>
+            Perder peso
+          </label>
+
+          <label class="objetivo-item {% if perfil.objetivo == 'MANUT' %}ativo{% endif %}">
+            <input type="radio" name="objetivo" value="MANUT" {% if perfil.objetivo == 'MANUT' %}checked{% endif %}>
+            Manter peso
+          </label>
+        </div>
+        <button type="submit" class="btn-salvar">Salvar</button>
+      </form>
+    </div>
+
+    <!-- IMC -->
+    <div class="imc-box">
+      <h3>IMC</h3>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="acao" value="atualizar_imc">
+
+        <div class="imc-campos">
+          <label>Altura (m)
+            <input type="text" name="altura_m" value="{{ perfil.altura_m|default:'' }}">
+          </label>
+          <label>Peso (kg)
+            <input type="text" name="peso_kg" value="{{ perfil.peso_kg|default:'' }}">
+          </label>
+        </div>
+
+        <div class="imc-resultado">
+          <p>
+            Resultado:
+            {% if imc %}{{ imc|floatformat:1 }} ({{ classificacao_imc }}){% else %}—{% endif %}
+          </p>
+        </div>
+
+        <button type="submit" class="btn-salvar">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  {% if msg %}
+  <div class="mensagem">{{ msg }}</div>
+  {% endif %}
+
+</div>
+
+<style>
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+.titulo {
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+.grafico-box {
+  background: #e6e6e6;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+.grafico-img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: contain;
+}
+.filtros {
+  margin-top: 10px;
+}
+
+
+.painel {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.objetivo-box,
+.imc-box {
+  flex: 1;
+  min-width: 300px;
+  background: #f1f1f1;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+/* ======= OBJETIVO ======= */
+.objetivo-opcoes {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+  gap: 10px;
+}
+.objetivo-item {
+  background: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  flex: 1;
+  border: 2px solid transparent;
+}
+.objetivo-item input {
+  display: none;
+}
+.objetivo-item.ativo {
+  border: 2px solid #333;
+  font-weight: bold;
+}
+.btn-salvar {
+  display: block;
+  margin: 0 auto;
+  padding: 8px 15px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* ======= IMC ======= */
+.imc-campos {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.imc-campos label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+.imc-campos input {
+  padding: 6px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+.imc-resultado {
+  background: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+
+.mensagem {
+  text-align: center;
+  margin-top: 15px;
+  color: green;
+  font-weight: bold;
+}
+</style>
 {% endblock %}

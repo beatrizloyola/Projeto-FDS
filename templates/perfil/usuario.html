@@ -11,5 +11,35 @@
 
 <p>Configurações e informações do usuário...</p>
 
+<hr>
+
+<h3>IMC</h3>
+<form method="post">
+    {% csrf_token %}
+    <div style="display: flex; gap: 20px; margin-bottom: 10px;">
+        <div>
+            <label for="altura">Altura (m)</label><br>
+            <input type="number" step="0.01" id="altura" name="altura"
+                   value="{{ perfil.altura_m|default:'' }}" style="width:120px;">
+        </div>
+        <div>
+            <label for="peso">Peso (kg)</label><br>
+            <input type="number" step="0.1" id="peso" name="peso"
+                   value="{{ perfil.peso_kg|default:'' }}" style="width:120px;">
+        </div>
+    </div>
+
+    <p>
+        Resultado:
+        {% if imc %}
+            {{ imc|floatformat:1 }} ({{ classificacao_imc }})
+        {% else %}
+            —
+        {% endif %}
+    </p>
+</form>
+
+<hr>
+
 <a href="{% url 'login' %}">Sair</a>
 {% endblock %}

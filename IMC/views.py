@@ -1,42 +1,46 @@
-from django.shortcuts import render, redirect, get_object_or_404
+# views.py
 from django.contrib.auth.decorators import login_required
-from .models import IMC
-
-
-@login_required
-def criar_imc(request):
-    if request.method == "POST":
-        altura = float(request.POST.get("altura"))
-        peso = float(request.POST.get("peso"))
-
-        imc = IMC.objects.create(
-            usuario=request.user,
-            altura=altura,
-            peso=peso
-        )
-        return redirect("detalhe_imc", id=imc.id)
-
-    return render(request, "imc/criar.html")
-
+from django.shortcuts import render
+from .models import Perfil  
 
 @login_required
-def detalhe_imc(request, id):
-    imc = get_object_or_404(IMC, id=id, usuario=request.user)
+def atividade(request):
+    perfil, _ = Perfil.objects.get_or_create(user=request.user)
+    msg = None
 
-    valor_imc = round(imc.peso / (imc.altura ** 2), 2)
+    if request.method == "POST" and request.POST.get("acao") == "atualizar_imc":
+        alt = (request.POST.get("altura_m") or "").replace(",", ".")
+        pes = (request.POST.get("peso_kg") or "").replace(",", ".")
+        try:
+            alt = round(float(alt), 2)
+            pes = round(float(pes), 1)
+            if alt <= 0 or pes <= 0:
+                raise ValueError
+        except Exception:
+            msg = "Informe altura e peso válidos."
+        else:
+            perfil.altura_m = alt
+            perfil.peso_kg = pes
+            perfil.save()
+            msg = "IMC atualizado com sucesso."
 
-    if valor_imc < 18.5:
-        classificacao = "Baixo peso"
-    elif 18.5 <= valor_imc <= 24.99:
-        classificacao = "Normal"
-    elif 25 <= valor_imc <= 29.99:
-        classificacao = "Sobrepeso"
-    else:
-        classificacao = "Obesidade"
+    imc = None
+    classificacao = None
+    if perfil.altura_m and perfil.peso_kg and perfil.altura_m > 0:
+        imc = float(perfil.peso_kg) / (float(perfil.altura_m) ** 2)
+        if imc < 18.5:   classificacao = "Abaixo do peso"
+        elif imc < 25:   classificacao = "Peso normal"
+        elif imc < 30:   classificacao = "Sobrepeso"
+        elif imc < 35:   classificacao = "Obesidade I"
+        elif imc < 40:   classificacao = "Obesidade II"
+        else:            classificacao = "Obesidade III"
 
+   
     contexto = {
+        "perfil": perfil,
         "imc": imc,
-        "valor_imc": valor_imc,
-        "classificacao": classificacao,
+        "classificacao_imc": classificacao,
+        "msg": msg,
+        
     }
-    return render(request, "imc/detalhe.html", contexto)
+    return render(request, "perfil/atividade.html", contexto)

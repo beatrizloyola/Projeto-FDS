@@ -1,7 +1,7 @@
-from django.urls import path
-from . import views
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    path('atividade/', views.atividade_view, name='atividade'),
-    path('usuario/', views.usuario_view, name='usuario'),
+    path('admin/', admin.site.urls),
+    path('', include('perfil.urls')),  
 ]
