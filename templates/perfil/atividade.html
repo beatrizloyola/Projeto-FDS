@@ -54,17 +54,23 @@
 
         <div class="imc-campos">
           <label>Altura (m)
-            <input type="text" name="altura_m" value="{{ perfil.altura_m|default:'' }}">
+            <input type="number" name="altura_m" value="{{ perfil.altura_m|default:'' }}" step="0.01">
           </label>
           <label>Peso (kg)
-            <input type="text" name="peso_kg" value="{{ perfil.peso_kg|default:'' }}">
+            <input type="number" name="peso_kg" value="{{ perfil.peso_kg|default:'' }}" step="0.01">
           </label>
         </div>
 
         <div class="imc-resultado">
           <p>
             Resultado:
-            {% if imc %}{{ imc|floatformat:1 }} ({{ classificacao_imc }}){% else %}—{% endif %}
+            {% if imc %}
+              {{ imc|floatformat:1 }} 
+              {%if classificacao_imc %}
+                ({{ classificacao_imc }})
+            {% else %}
+              —
+            {% endif %}
           </p>
         </div>
 
@@ -74,7 +80,7 @@
   </div>
 
   {% if msg %}
-  <div class="mensagem">{{ msg }}</div>
+    <div class="mensagem">{{ msg }}</div>
   {% endif %}
 
 </div>
