@@ -52,18 +52,12 @@
 
   <div class="imc-box">
     <h3>IMC</h3>
-    <form method="post">
-      {% csrf_token %}
-      <input type="hidden" name="acao" value="atualizar_imc">
-      <div class="imc-campos">
-        <label>Altura (m)
-          <input type="number" name="altura_m" value="{{ perfil.altura_m|default:'' }}" step="0.01">
-        </label>
-        <label>Peso (kg)
-          <input type="number" name="peso_kg" value="{{ perfil.peso_kg|default:'' }}" step="0.01">
-        </label>
-      </div>
+    {% if msg %}
+      <p>{{ msg }}</p>
+    {% else %}
       <div class="imc-resultado">
+        <p>Altura: {{ perfil.altura_m }} m</p>
+        <p>Peso: {{ perfil.peso_kg }} kg</p>
         <p>
           Resultado:
           {% if imc %}
@@ -72,10 +66,14 @@
             —
           {% endif %}
         </p>
+        {% if gasto_calorico %}
+          <p>Gasto calórico diário médio: {{ gasto_calorico }} kcal</p>
+        {% endif %}
+        {% if agua_recomendada %}
+          <p>Consumo de água recomendado: {{ agua_recomendada }} L/dia</p>
+        {% endif %}
       </div>
-      {% if msg %}<div class="mensagem">{{ msg }}</div>{% endif %}
-      <button type="submit" class="btn-salvar">Atualizar IMC</button>
-    </form>
+    {% endif %}
   </div>
 
 
