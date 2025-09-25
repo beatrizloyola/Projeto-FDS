@@ -10,34 +10,27 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('treinos', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Exercicio',
+            name='Atividade',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nome', models.CharField(max_length=100)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Treino',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nome', models.CharField(max_length=100)),
+                ('data', models.DateTimeField(auto_now_add=True)),
+                ('treino', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='treinos.treino')),
                 ('usuario', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
-            name='TreinoExercicio',
+            name='Perfil',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('carga', models.IntegerField()),
-                ('repeticoes', models.IntegerField()),
-                ('descanso', models.IntegerField()),
-                ('exercicio', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='treinos.exercicio')),
-                ('treino', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='itens', to='treinos.treino')),
+                ('bio', models.TextField(blank=True, null=True)),
+                ('foto', models.ImageField(blank=True, null=True, upload_to='perfil/')),
+                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

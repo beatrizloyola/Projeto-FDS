@@ -34,7 +34,7 @@ def criar_treino_view(request):
 
         return redirect("treinos")
 
-    exercicios = Exercicio.objects.all()
+    exercicios = Exercicio.objects.all().order_by("nome")
     return render(request, "treinos/novo_treino.html", {"exercicios": exercicios})
 
 @login_required

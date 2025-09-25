@@ -1,7 +1,8 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from . import views
+from IMC.views import atividade  # usar a view centralizada de IMC
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('perfil.urls')),  
+    path("usuario/", views.usuario_view, name="usuario"),
+    path("atividade/", atividade, name="atividade"),
 ]

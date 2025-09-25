@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+
+<h2>Perfil</h2>
+<nav>
+    <a href="{% url 'atividade' %}">Atividade</a>
+    <a href="{% url 'usuario' %}">Usuário</a>
+</nav>
+
 <div class="container">
-
-
-  <h2 class="titulo">Atividade</h2>
 
 
   <div class="grafico-box">
@@ -45,39 +50,34 @@
       </form>
     </div>
 
-    <!-- IMC -->
-    <div class="imc-box">
-      <h3>IMC</h3>
-      <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="acao" value="atualizar_imc">
-
-        <div class="imc-campos">
-          <label>Altura (m)
-            <input type="number" name="altura_m" value="{{ perfil.altura_m|default:'' }}" step="0.01">
-          </label>
-          <label>Peso (kg)
-            <input type="number" name="peso_kg" value="{{ perfil.peso_kg|default:'' }}" step="0.01">
-          </label>
-        </div>
-
-        <div class="imc-resultado">
-          <p>
-            Resultado:
-            {% if imc %}
-              {{ imc|floatformat:1 }} 
-              {%if classificacao_imc %}
-                ({{ classificacao_imc }})
-            {% else %}
-              —
-            {% endif %}
-          </p>
-        </div>
-
-        <button type="submit" class="btn-salvar">Salvar</button>
-      </form>
-    </div>
+  <div class="imc-box">
+    <h3>IMC</h3>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="acao" value="atualizar_imc">
+      <div class="imc-campos">
+        <label>Altura (m)
+          <input type="number" name="altura_m" value="{{ perfil.altura_m|default:'' }}" step="0.01">
+        </label>
+        <label>Peso (kg)
+          <input type="number" name="peso_kg" value="{{ perfil.peso_kg|default:'' }}" step="0.01">
+        </label>
+      </div>
+      <div class="imc-resultado">
+        <p>
+          Resultado:
+          {% if imc %}
+            {{ imc|floatformat:1 }} {% if classificacao_imc %} ({{ classificacao_imc }}){% endif %}
+          {% else %}
+            —
+          {% endif %}
+        </p>
+      </div>
+      {% if msg %}<div class="mensagem">{{ msg }}</div>{% endif %}
+      <button type="submit" class="btn-salvar">Atualizar IMC</button>
+    </form>
   </div>
+
 
   {% if msg %}
     <div class="mensagem">{{ msg }}</div>
@@ -85,7 +85,7 @@
 
 </div>
 
-<style>
+{% comment %} <style>
 
 .container {
   max-width: 1100px;
@@ -197,5 +197,6 @@
   color: green;
   font-weight: bold;
 }
-</style>
+</style> {% endcomment %}
+
 {% endblock %}
