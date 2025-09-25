@@ -11,14 +11,16 @@
 
 <div class="container">
 
-
   <div class="grafico-box">
     <h3>Dias Treinados</h3>
-    <img src="{% static 'img/grafico_exemplo.png' %}" alt="Gráfico de treinos" class="grafico-img">
     <div class="filtros">
-      <label><input type="checkbox" name="mensal"> Mensal</label>
-      <label><input type="checkbox" name="anual"> Anual</label>
+      <button type="button" class="tab-btn" data-chart="mensal">Mensal</button>
+      <button type="button" class="tab-btn" data-chart="anual">Anual</button>
     </div>
+    <canvas id="graficoTreinos" height="140"></canvas>
+    {% if not grafico_mensal_values and not grafico_anual_values %}
+      <p style="font-size:0.85rem;color:#666;">Sem registros de treinos para gerar gráfico.</p>
+    {% endif %}
   </div>
 
   <!-- ====== ÁREA OBJETIVO + IMC ====== -->
@@ -197,4 +199,20 @@
 }
 </style> {% endcomment %}
 
+{% endblock %}
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  window.__GRAFICO__ = {
+    mensalLabels: {{ grafico_mensal_labels|default:'[]'|safe }},
+    mensalValues: {{ grafico_mensal_values|default:'[]'|safe }},
+    anualLabels: {{ grafico_anual_labels|default:'[]'|safe }},
+    anualValues: {{ grafico_anual_values|default:'[]'|safe }}
+  };
+</script>
+<script src="{% static 'js/grafico_atividade.js' %}"></script>
+<style>
+  .tab-btn { background:#ddd; border:0; padding:6px 12px; margin:0 4px; cursor:pointer; border-radius:4px; }
+  .tab-btn.ativo { background:#4b6cb7; color:#fff; }
+</style>
 {% endblock %}
