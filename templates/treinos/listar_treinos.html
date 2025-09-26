@@ -1,32 +1,61 @@
 {% extends "base.html" %}
-
-{% block title %}Treinos{% endblock %}
+{% load static %}
 
 {% block content %}
-<h2>Página de Treinos</h2>
 
-{% if treinos %}
-    <ul>
-        {% for treino in treinos %}
-            <li>
-                <strong>{{ treino.nome }}</strong>
-                <a href="{% url 'editar_treino' treino.id %}">Editar</a> |
-                <a href="{% url 'excluir_treino' treino.id %}">Excluir</a> |
-                <a href="{% url 'concluir_treino' treino.id %}" style="color:green; font-weight:bold;">Concluir Treino</a>
+<script id="exercicios-options-template" type="text/template">
+    {% for exercicio in exercicios %}
+        <option value="{{ exercicio.id }}">{{ exercicio.nome }}</option>
+    {% endfor %}
+</script>
 
-                <ul>
-                    {% for item in treino.itens.all %}
-                        <li>
-                            {{ item.exercicio.nome }} - {{ item.carga }}kg - {{ item.repeticoes }} rep - {{ item.descanso }}s
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Você ainda não tem treinos cadastrados.</p>
-{% endif %}
-    <a href="{% url 'criar_treino' %}" class="btn btn-primary">+ Criar treino</a>
+<div class="treinos-board-wrapper">
+    {% if treinos %}
+    <div class="treinos-board" id="treinosBoard" data-exercicios-url="{% url 'criar_treino' %}">
+                {% for treino in treinos %}
+                    <div class="treino-card {% if treino.id in treinos_feitos_hoje %}done{% endif %}" data-treino-id="{{ treino.id }}">
+                        <h4 class="treino-title" data-edit-inline="1">{{ treino.nome }}</h4>
+                        <div class="exercise-wrapper">
+                            {% if treino.itens.all %}
+                                {% for item in treino.itens.all %}
+                                <div class="exercise-form readonly" data-exercicio-id="{{ item.exercicio.id }}" data-carga="{{ item.carga }}" data-repeticoes="{{ item.repeticoes }}" data-descanso="{{ item.descanso }}">
+                                    <div style="font-size:12px; font-weight:600;">Exercício {{ forloop.counter }}:</div>
+                                    <div>{{ item.exercicio.nome }}</div>
+                                    <div>Carga: {{ item.carga }} kg</div>
+                                    <div>Repetições: {{ item.repeticoes }}</div>
+                                    <div>Descanso: {{ item.descanso }} s</div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="placeholder-msg">Sem exercícios ainda.</div>
+                            {% endif %}
+                        </div>
+                        <div class="treino-actions">
+                            <button type="button" class="edit-box" data-inline-edit title="Editar treino">✎</button>
+                            <form method="post" action="{% url 'concluir_treino' treino.id %}" class="inline-form">
+                                {% csrf_token %}
+                                <button type="submit" class="finish-box {% if treino.id in treinos_feitos_hoje %}done{% endif %}" title="Marcar como concluído">✓</button>
+                            </form>
+                            <form method="post" action="{% url 'excluir_treino' treino.id %}" class="inline-form" onsubmit="return confirm('Tem certeza que deseja excluir este treino?');">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-box" title="Excluir treino">🗑</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+    </div>
+        <div class="new-treino-bar">
+            <div class="new-treino-btn" id="btnNovoTreinoInline" data-new-inline title="Criar novo treino">+</div>
+        </div>
+    {% else %}
+    <div class="empty-board">
+        <div class="add-first" onclick="window.location.href='{% url 'criar_treino' %}'" title="Criar primeiro treino">+</div>
+    </div>
+    {% endif %}
+</div>
 
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/treinos_inline.js' %}"></script>
 {% endblock %}

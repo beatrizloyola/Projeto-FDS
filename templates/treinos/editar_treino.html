@@ -1,6 +1,6 @@
 <h2>Editar Treino</h2>
 
-<form method="post">
+<form method="post" id="formEditarTreino">
     {% csrf_token %}
     <label>Nome do Treino:</label>
     <input type="text" name="nome" value="{{ treino.nome }}" required>
@@ -8,20 +8,48 @@
     <h3>Exercícios</h3>
     <div id="exercicios">
         {% for item in treino.itens.all %}
-            <div>
-                <select name="exercicio">
-                    {% for exercicio in exercicios %}
-                        <option value="{{ exercicio.id }}" {% if exercicio.id == item.exercicio.id %}selected{% endif %}>
-                            {{ exercicio.nome }}
-                        </option>
-                    {% endfor %}
-                </select>
-                <input type="number" name="carga" value="{{ item.carga }}" placeholder="Carga (kg)">
-                <input type="number" name="repeticoes" value="{{ item.repeticoes }}" placeholder="Repetições">
-                <input type="number" name="descanso" value="{{ item.descanso }}" placeholder="Descanso (s)">
-            </div>
+        <div class="ex-row">
+            <select name="exercicio">
+                {% for exercicio in exercicios %}
+                <option value="{{ exercicio.id }}" {% if exercicio.id == item.exercicio.id %}selected{% endif %}>{{ exercicio.nome }}</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="carga" value="{{ item.carga }}" placeholder="Carga (kg)">
+            <input type="number" name="repeticoes" value="{{ item.repeticoes }}" placeholder="Repetições">
+            <input type="number" name="descanso" value="{{ item.descanso }}" placeholder="Descanso (s)">
+            <button type="button" class="rem-ex" onclick="removerEx(this)" title="Remover">×</button>
+        </div>
         {% endfor %}
     </div>
 
+    <div style="margin:12px 0;">
+        <button type="button" id="btnAddEx" onclick="addExercicio()">+ Adicionar Exercício</button>
+    </div>
     <button type="submit">Salvar Alterações</button>
 </form>
+
+<template id="tpl-exercicio">
+    <div class="ex-row">
+        <select name="exercicio">
+            {% for exercicio in exercicios %}
+            <option value="{{ exercicio.id }}">{{ exercicio.nome }}</option>
+            {% endfor %}
+        </select>
+        <input type="number" name="carga" placeholder="Carga (kg)">
+        <input type="number" name="repeticoes" placeholder="Repetições">
+        <input type="number" name="descanso" placeholder="Descanso (s)">
+        <button type="button" class="rem-ex" onclick="removerEx(this)" title="Remover">×</button>
+    </div>
+</template>
+
+<script>
+    function addExercicio(){
+        const tpl = document.getElementById('tpl-exercicio');
+        const clone = tpl.content.cloneNode(true);
+        document.getElementById('exercicios').appendChild(clone);
+    }
+    function removerEx(btn){
+        const row = btn.closest('.ex-row');
+        if(row){ row.remove(); }
+    }
+</script>

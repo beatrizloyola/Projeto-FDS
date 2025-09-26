@@ -1,0 +1,216 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* ====== HEADER NOVO ====== */
+.site-header { width:100%; }
+.top-bar { background:#222; padding:10px 0; text-align:center; }
+.logo-area { width:100%; max-width:380px; margin:0 auto; min-height:90px; display:flex; align-items:center; justify-content:center; }
+.logo-area img { max-width:100%; max-height:80px; object-fit:contain; }
+
+.main-menu { background:#d52d2d; display:flex; justify-content:space-around; align-items:center; padding:10px 0; font-weight:600; }
+.main-menu .menu-item { color:#fff; text-decoration:none; font-size:17px; position:relative; padding:4px 14px; transition:color .2s; }
+.main-menu .menu-item:hover { color:#111; }
+.main-menu .menu-item.active { color:#111; font-weight:700; }
+.main-menu .menu-item.active:after { content:""; position:absolute; left:10%; right:10%; bottom:-6px; height:3px; background:#111; border-radius:2px; }
+
+/* Logo */
+.header {
+  background-color: #2b2b2b;
+  padding: 15px;
+  text-align: center;
+}
+.header img {
+  height: 20vh;
+  object-fit: contain;
+}
+
+/* Menu Seleção */
+.menu {
+  display: flex;
+  justify-content: space-around;
+  background-color: #d32f2f;
+  padding: 10px 0;
+}
+.menu a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+}
+.menu a:hover {
+  color: black;
+}
+
+/* ===== Layout Perfil/Atividade ===== */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+.titulo { text-align: center; margin-top: 20px; }
+
+.grafico-box {
+  background: #e6e6e6;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: center;
+  border-radius: 6px;
+}
+.grafico-img { width: 100%; max-height: 250px; object-fit: contain; }
+/* .filtros centralizado agora em grafico_atividade.css */
+
+.painel {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 35px;
+}
+.objetivo-box,
+.imc-box {
+  flex: 1;
+  min-width: 300px;
+  background: #f1f1f1;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+
+/* ===== Objetivo ===== */
+.objetivo-opcoes {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+  gap: 10px;
+}
+.objetivo-item {
+  background: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  flex: 1;
+  border: 2px solid transparent;
+  transition: border-color .2s, box-shadow .2s;
+}
+.objetivo-item input { display: none; }
+.objetivo-item:hover { box-shadow: 0 0 0 2px #999 inset; }
+.objetivo-item.ativo { border: 2px solid #333; font-weight: bold; }
+.btn-salvar {
+  display: block;
+  margin: 0 auto;
+  padding: 8px 15px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.btn-salvar:hover { background:#000; }
+
+/* ===== IMC ===== */
+.imc-campos {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.imc-campos label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+.imc-campos input {
+  padding: 6px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+.imc-resultado {
+  background: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.mensagem {
+  text-align: center;
+  margin-top: 15px;
+  color: green;
+  font-weight: bold;
+}
+
+/* ===== Treinos Board ===== */
+.treinos-board-wrapper { margin:25px auto; max-width:1400px; }
+.treinos-board { background:#555; padding:18px 18px 26px; min-height:260px; position:relative; display:flex; gap:28px; align-items:stretch; overflow-x:auto; }
+.treinos-board::-webkit-scrollbar { height:10px; }
+.treinos-board::-webkit-scrollbar-track { background:#444; }
+.treinos-board::-webkit-scrollbar-thumb { background:#777; border-radius:6px; }
+.treino-card { background:#8a8a8a; width:210px; flex:0 0 auto; padding:14px 14px 50px; position:relative; border:1px solid #707070; box-shadow:0 2px 4px rgba(0,0,0,.25); display:flex; flex-direction:column; gap:10px; }
+.treino-card h4 { margin:0 0 6px; font-size:15px; text-align:center; cursor:pointer; }
+.treino-card h4:hover { text-decoration:underline; }
+.exercise-form { background:#b5b5b5; padding:8px 8px 12px; display:flex; flex-direction:column; gap:6px; border:1px solid #969696; }
+.exercise-form select, .exercise-form input { width:100%; padding:4px 6px; box-sizing:border-box; }
+.exercise-actions { margin-top:4px; text-align:center; }
+.btn-salvar-ex { background:#444; color:#fff; border:0; padding:6px 10px; cursor:pointer; font-size:12px; width:100%; }
+.btn-salvar-ex:hover { background:#222; }
+.add-exercicio-btn { position:absolute; top:10px; right:8px; width:26px; height:26px; border:2px solid #eee; background:#666; color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.add-exercicio-btn:hover { background:#7a7a7a; }
+.finish-box { position:absolute; bottom:10px; right:10px; width:30px; height:30px; border:2px solid #fff; background:#666; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; }
+.finish-box.done { background:#2d7a2d; border-color:#d2ffd2; }
+.empty-board { background:#555; padding:70px 30px; text-align:center; position:relative; }
+.empty-board .add-first { width:120px; height:120px; background:#666; border:3px solid #eee; display:flex; align-items:center; justify-content:center; font-size:46px; font-weight:700; color:#eee; margin:0 auto; cursor:pointer; }
+.empty-board .add-first:hover { background:#777; }
+.treino-card.collapsed .exercise-form:not(:first-child) { display:none; }
+.treino-card.collapsed .add-exercicio-btn { top:40px; }
+.treino-card .placeholder-msg { font-size:12px; text-align:center; color:#222; }
+
+/* ===== Abas Perfil ===== */
+.perfil-tabs { display:flex; justify-content:center; gap:0; background:#4a0f0f; margin:0 0 25px; border-bottom:4px solid #8d2323; }
+.perfil-tabs a { flex:1; max-width:220px; text-align:center; text-decoration:none; padding:10px 0 12px; font-weight:600; font-size:15px; color:#f5f5f5; background:transparent; border-right:1px solid #651515; transition:background .25s, color .25s; }
+.perfil-tabs a:last-child { border-right:0; }
+.perfil-tabs a:hover { background:#6e1d1d; }
+.perfil-tabs a.active { background:#8d2323; color:#fff; position:relative; }
+.perfil-tabs a.active:after { display:none; }
+.perfil-tabs + .container { margin-top:0; }
+
+/* ===== Treinos Layout Overrides ===== */
+.treinos-board { padding:22px 22px 30px; min-height:300px; flex-wrap:wrap; gap:26px; align-items:flex-start; }
+.treino-card { background:#666; flex:1 1 100%; padding:14px 14px 60px; display:flex; flex-direction:column; gap:14px; border:1px solid #5a5a5a; }
+.treino-card h4 { flex:0 0 auto; order:0; background:transparent; padding:0 0 2px; font-size:16px; margin:0; text-align:center; border:none; color:#fff; }
+.treino-card.done h4 { color:#fff; }
+/* Wrapper para os blocos de exercício em linha */
+.treino-card .exercise-wrapper { display:flex; flex-wrap:wrap; gap:14px; align-items:stretch; justify-content:flex-start; }
+/* Garantir que cada formulário (tile) mantenha largura fixa e não force scroll lateral */
+.treino-card .exercise-form { width:210px; flex:0 0 210px; }
+.exercise-form { background:#bdbdbd; width:210px; flex:0 0 210px; }
+.add-exercicio-btn { top:10px; right:54px; width:30px; height:30px; background:#555; }
+.finish-box { top:10px; right:10px; bottom:auto; background:#555; }
+.finish-box.done, .treino-card.done .finish-box { background:#2d7a2d; }
+.treino-actions { position:absolute; top:10px; right:10px; display:flex; gap:6px; }
+.treino-actions .inline-form { margin:0; }
+.finish-box { position:static; }
+.delete-box { background:#553; border:2px solid #fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; }
+.delete-box:hover { background:#774; }
+.edit-box { background:#555; border:2px solid #fff; display:flex; align-items:center; justify-content:center; text-decoration:none; color:#fff; font-weight:700; font-size:16px; line-height:1; }
+.edit-box:hover { background:#666; }
+.inline-treino-form { display:flex; flex-wrap:wrap; gap:14px; align-items:stretch; }
+.inline-treino-form .exercise-form.inline-edit { width:210px; flex:0 0 210px; }
+.inline-treino-form .inline-main-actions { flex:1 1 100%; display:flex; gap:10px; }
+.inline-treino-form .inline-main-actions .btn-salvar-ex { flex:1; }
+.treino-card .card-inline-actions { display:flex; justify-content:center; gap:16px; margin-top:8px; padding-top:10px; border-top:1px solid rgba(255,255,255,.15); }
+.treino-card .card-inline-actions button { min-width:110px; font-size:14px; padding:8px 18px; border:none; border-radius:26px; cursor:pointer; color:#fff; font-weight:600; letter-spacing:.5px; background:#444; transition:background .2s, transform .15s; }
+.treino-card .card-inline-actions button.action-save { background:#2d7a2d; }
+.treino-card .card-inline-actions button.action-cancel { background:#555; }
+.treino-card .card-inline-actions button:hover { filter:brightness(1.08); }
+.treino-card .card-inline-actions button:active { transform:translateY(1px); }
+.treino-actions .finish-box,
+.treino-actions .delete-box,
+.treino-actions .edit-box { width:30px; height:30px; font-size:16px; padding:0; box-sizing:border-box; }
+.new-treino-bar { margin-top:26px; text-align:center; width:100%; }
+.new-treino-btn { display:inline-flex; width:70px; height:70px; background:#666; border:3px solid #eee; align-items:center; justify-content:center; font-size:36px; font-weight:700; color:#eee; cursor:pointer; border-radius:10px; }
+.new-treino-btn:hover { background:#777; }

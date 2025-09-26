@@ -1,0 +1,5 @@
+.tab-btn { background:#ddd; border:0; padding:6px 12px; margin:0 4px; cursor:pointer; border-radius:4px; transition:background .2s; }
+.tab-btn:hover { background:#c8c8c8; }
+.tab-btn.ativo { background:#4b6cb7; color:#fff; }
+.grafico-box { position:relative; }
+.grafico-box .filtros { margin-top:12px; display:flex; justify-content:center; gap:8px; }

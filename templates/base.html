@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Treinaí{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <header>
-        <h1>Treinaí</h1>
+    <header class="site-header">
+        <div class="top-bar">
+            <div class="logo-area">
+                <img src="{% static 'img/logo.png' %}" alt="Treinaí" loading="lazy">
+            </div>
+        </div>
         {% if not request.resolver_match.url_name == 'login' %}
-            <nav>
-                <a href="/treinos/">Treinos</a>
-                <a href="/medalhas/">Medalhas</a>
-                <a href="/perfil/atividade/">Perfil</a>
-            </nav>
+        <nav class="main-menu">
+            <a href="/treinos/" class="menu-item {% if '/treinos/' in request.path %}active{% endif %}">Treinos</a>
+            <a href="/medalhas/" class="menu-item {% if '/medalhas/' in request.path %}active{% endif %}">Medalhas</a>
+            <a href="/perfil/atividade/" class="menu-item {% if '/perfil/' in request.path %}active{% endif %}">Perfil</a>
+        </nav>
         {% endif %}
     </header>
 
