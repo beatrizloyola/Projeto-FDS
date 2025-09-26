@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from config import views
-from cadastro.views import cadastro_view 
+from cadastro.views import cadastro_view
 
 urlpatterns = [
     path("admin/", admin.site.urls),

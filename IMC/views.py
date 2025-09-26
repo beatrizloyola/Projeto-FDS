@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from perfil.models import Perfil, Atividade  # reuse existing models
+from perfil.models import Perfil, Atividade
 from django.utils import timezone
 from datetime import timedelta, date
 
@@ -20,7 +20,7 @@ def _classificar_imc(imc: float) -> str:
 
 
 @login_required
-def atividade(request):  # manter o nome para usar na URL 'atividade'
+def atividade(request):
 	perfil, _ = Perfil.objects.get_or_create(user=request.user)
 
 	msg = None
@@ -43,20 +43,14 @@ def atividade(request):  # manter o nome para usar na URL 'atividade'
 
 	atividades = Atividade.objects.filter(usuario=request.user)
 
-	# ====================== AGREGAÇÃO PARA GRÁFICO ======================
-	# Construímos dois conjuntos de dados:
-	# 1) Mensal (últimas 4 semanas): quantidade de dias distintos em que houve pelo menos um treino concluído em cada bloco de 7 dias.
-	# 2) Anual (ano corrente): quantidade de dias distintos com treino em cada mês.
-	# Observação: definimos "dia treinado" como "existe ao menos uma Atividade registrada naquele dia".
 	now = timezone.localdate()
-	# --- Mensal (últimas 4 semanas, em blocos de 7 dias) ---
 	start_28 = now - timedelta(days=27)
 	ativ_28 = Atividade.objects.filter(usuario=request.user, data__date__gte=start_28, data__date__lte=now)
 	datas_28 = {a.data.date() for a in ativ_28}
-	semanas_labels = []  # Ex: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']
-	semanas_values = []  # quantidade de dias treinados distintos
-	# Construir da mais antiga para a mais recente
-	for i in range(4, 0, -1):  # 4,3,2,1
+	semanas_labels = [] 
+	semanas_values = []  
+
+	for i in range(4, 0, -1):  
 		idx = i - 1
 		week_start = now - timedelta(days=7*idx + 6)
 		week_end = now - timedelta(days=7*idx)
@@ -64,7 +58,6 @@ def atividade(request):  # manter o nome para usar na URL 'atividade'
 		semanas_labels.append(f"Semana {5 - i}")
 		semanas_values.append(count)
 
-	# --- Anual (dias treinados por mês no ano corrente) ---
 	year = now.year
 	ativ_year = Atividade.objects.filter(usuario=request.user, data__year=year)
 	datas_year = [a.data.date() for a in ativ_year]
@@ -74,7 +67,6 @@ def atividade(request):  # manter o nome para usar na URL 'atividade'
 		unique_days = {d for d in datas_year if d.month == m}
 		meses_values.append(len(unique_days))
 
-	# ==================== FIM AGREGAÇÃO ======================
 
 	imc = None
 	classificacao = None
@@ -101,7 +93,6 @@ def atividade(request):  # manter o nome para usar na URL 'atividade'
 		"gasto_calorico": gasto_calorico,
 		"agua_recomendada": agua_recomendada,
 		"msg": msg,
-		# Dados do gráfico
 		"grafico_mensal_labels": semanas_labels,
 		"grafico_mensal_values": semanas_values,
 		"grafico_anual_labels": meses_labels,

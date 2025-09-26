@@ -1,5 +1,5 @@
 (function(){
-  // Espera que as variáveis globais window.__GRAFICO__ sejam definidas no template
+
   if(!window.__GRAFICO__){return;}
   const { mensalLabels, mensalValues, anualLabels, anualValues } = window.__GRAFICO__;
 
@@ -40,7 +40,7 @@
       switchChart(btn.dataset.chart);
     });
   });
-  // default
+
   const defaultBtn = document.querySelector('.tab-btn[data-chart="mensal"]');
   if(defaultBtn) defaultBtn.classList.add('ativo');
 })();

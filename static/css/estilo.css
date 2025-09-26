@@ -3,7 +3,7 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* ====== HEADER NOVO ====== */
+/* Header */
 .site-header { width:100%; }
 .top-bar { background:#222; padding:10px 0; text-align:center; }
 .logo-area { width:100%; max-width:380px; margin:0 auto; min-height:90px; display:flex; align-items:center; justify-content:center; }
@@ -43,7 +43,7 @@ body {
   color: black;
 }
 
-/* ===== Layout Perfil/Atividade ===== */
+/* Layout Perfil/Atividade */
 .container {
   max-width: 1100px;
   margin: 0 auto;
@@ -78,7 +78,7 @@ body {
   box-shadow: 0 1px 2px rgba(0,0,0,.08);
 }
 
-/* ===== Objetivo ===== */
+/* Objetivo */
 .objetivo-opcoes {
   display: flex;
   justify-content: space-around;
@@ -110,7 +110,7 @@ body {
 }
 .btn-salvar:hover { background:#000; }
 
-/* ===== IMC ===== */
+/* IMC */
 .imc-campos {
   display: flex;
   justify-content: space-between;
@@ -144,7 +144,7 @@ body {
   font-weight: bold;
 }
 
-/* ===== Treinos Board ===== */
+/* Treinos Board */
 .treinos-board-wrapper { margin:25px auto; max-width:1400px; }
 .treinos-board { background:#555; padding:18px 18px 26px; min-height:260px; position:relative; display:flex; gap:28px; align-items:stretch; overflow-x:auto; }
 .treinos-board::-webkit-scrollbar { height:10px; }
@@ -169,7 +169,7 @@ body {
 .treino-card.collapsed .add-exercicio-btn { top:40px; }
 .treino-card .placeholder-msg { font-size:12px; text-align:center; color:#222; }
 
-/* ===== Abas Perfil ===== */
+/* Abas Perfil */
 .perfil-tabs { display:flex; justify-content:center; gap:0; background:#4a0f0f; margin:0 0 25px; border-bottom:4px solid #8d2323; }
 .perfil-tabs a { flex:1; max-width:220px; text-align:center; text-decoration:none; padding:10px 0 12px; font-weight:600; font-size:15px; color:#f5f5f5; background:transparent; border-right:1px solid #651515; transition:background .25s, color .25s; }
 .perfil-tabs a:last-child { border-right:0; }
@@ -178,7 +178,7 @@ body {
 .perfil-tabs a.active:after { display:none; }
 .perfil-tabs + .container { margin-top:0; }
 
-/* ===== Treinos Layout Overrides ===== */
+/* Treinos Layout Overrides */
 .treinos-board { padding:22px 22px 30px; min-height:300px; flex-wrap:wrap; gap:26px; align-items:flex-start; }
 .treino-card { background:#666; flex:1 1 100%; padding:14px 14px 60px; display:flex; flex-direction:column; gap:14px; border:1px solid #5a5a5a; }
 .treino-card h4 { flex:0 0 auto; order:0; background:transparent; padding:0 0 2px; font-size:16px; margin:0; text-align:center; border:none; color:#fff; }

@@ -5,10 +5,10 @@ class Usuario(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def _str_(self):
-        return self.usuario.username  
+        return self.usuario.username
 
 
-class Medidas(models.Model):    
+class Medidas(models.Model):
     altura = models.DecimalField(max_digits=5, decimal_places=2)
     peso = models.DecimalField(max_digits=5, decimal_places=2)
 

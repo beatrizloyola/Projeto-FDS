@@ -1,13 +1,9 @@
-/* Treinos Inline - Fase 1
- * Objetivo: transformar cards vazios ou recém-criados em modo de edição inline sem redirecionar.
- */
 (function(){
   const board = document.getElementById('treinosBoard');
   if(!board) return;
   const createBtn = document.getElementById('btnNovoTreinoInline');
   const criarTreinoUrl = board.getAttribute('data-exercicios-url') || '/treinos/criar/';
 
-  // Helper para criar bloco de exercício
   function createExerciseBlock(exerciciosOptionsHtml){
     const wrapper = document.createElement('div');
     wrapper.className = 'exercise-form inline-edit';
@@ -24,7 +20,6 @@
     return wrapper;
   }
 
-  // Montar options a partir de script injection (template server-side)
   const exerciciosSelectTemplate = (function(){
     const scriptTemplate = document.getElementById('exercicios-options-template');
     if(scriptTemplate){
@@ -33,7 +28,6 @@
     return '';
   })();
 
-  // Entrada em modo edição
   board.addEventListener('click', function(e){
     const editBtn = e.target.closest('[data-inline-edit]');
     const titleEl = e.target.closest('.treino-title');
@@ -44,7 +38,7 @@
       card = titleEl.closest('.treino-card');
       if(card && card.dataset.inlineEditing !== '1'){
         enableTitleEditing(titleEl);
-        return; // título inline sem abrir edição de exercícios automaticamente
+        return; 
       }
     } else if(e.target.closest('.placeholder-msg')) {
       card = e.target.closest('.treino-card');
@@ -62,11 +56,9 @@
     const exerciseWrapper = card.querySelector('.exercise-wrapper');
     if(!exerciseWrapper) return;
 
-    // Guardar estado antigo para possível cancelamento
     const snapshot = Array.from(exerciseWrapper.children).map(el => el.cloneNode(true));
     card._snapshotOriginal = snapshot;
 
-    // Limpar readonly temporariamente
     exerciseWrapper.querySelectorAll('.exercise-form.readonly').forEach(r => r.remove());
 
     const form = document.createElement('form');
@@ -91,7 +83,6 @@
       form.appendChild(firstBlock);
     }
 
-    // Área de ações local no rodapé do card
     let footerActions = card.querySelector('.card-inline-actions');
     if(!footerActions){
       footerActions = document.createElement('div');
@@ -104,15 +95,12 @@
 
     exerciseWrapper.appendChild(form);
 
-    // Focar primeiro select
     const firstSelect = form.querySelector('select[name="exercicio"]');
     if(firstSelect) firstSelect.focus();
   }
 
-  // Criação inline de novo treino
   if(createBtn){
     createBtn.addEventListener('click', function(){
-      // Evitar multi-criação simultânea
       if(board.querySelector('.treino-card[data-novo="1"]')) return;
       const newCard = document.createElement('div');
       newCard.className = 'treino-card';
@@ -157,7 +145,6 @@
     input.addEventListener('blur', () => finalize(true));
   }
 
-  // Delegação para botões internos (incluindo ações fora do form, como salvar/cancelar)
   board.addEventListener('click', function(e){
     const btn = e.target.closest('button[data-action]');
     if(!btn) return;
@@ -201,7 +188,6 @@
       const isNovo = card.dataset.novo === '1' && !card.getAttribute('data-treino-id');
       const treinoId = card.getAttribute('data-treino-id');
       const fd = new FormData();
-      // Ler nome (pode estar input ou h4)
       const titleInput = card.querySelector('.treino-title-input');
       const nomeTreino = titleInput ? titleInput.value.trim() : (card.querySelector('.treino-title')?.textContent?.trim());
       fd.append('nome', nomeTreino || 'Treino');
@@ -221,11 +207,9 @@
       }).then(r => { if(!r.ok) throw new Error('Erro ao salvar'); return r.json(); })
         .then(data => {
           if(!data.ok) throw new Error('Resposta inválida');
-          // Se novo, setar ID e injetar ações (concluir/excluir/editar)
           if(isNovo){
             card.setAttribute('data-treino-id', data.treino.id);
             delete card.dataset.novo;
-            // Injetar barra de ações
             const actions = document.createElement('div');
             actions.className = 'treino-actions';
             actions.innerHTML = `
@@ -270,12 +254,10 @@
   });
 
   function getCsrfToken(){
-    // Tenta obter do cookie; se base.html já injeta token em meta, pode adaptar
     const m = document.cookie.match(/csrftoken=([^;]+)/);
     if(m) return m[1];
     const meta = document.querySelector('meta[name="csrf-token"]');
     return meta ? meta.getAttribute('content') : '';
   }
 
-  // Removidas funções de barra global; ações agora ficam no card
 })();

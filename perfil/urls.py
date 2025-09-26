@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from IMC.views import atividade  # usar a view centralizada de IMC
+from IMC.views import atividade
 
 urlpatterns = [
     path("usuario/", views.usuario_view, name="usuario"),
