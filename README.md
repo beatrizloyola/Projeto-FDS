@@ -15,6 +15,10 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 
 * [Histórias](https://docs.google.com/document/d/1nskFYTLay5ukKv1aLaWjdS51-D0iQldLhl93W5BLoj8/edit?usp=sharing)
 
+## Segunda entrega
+
+* [Screencast histórias em produção (deploy)](https://www.youtube.com/watch?v=wNvsl2hhWSY)
+
 ## Membros
 
 * Beatriz Loyola Gomes de Vasconcelos
