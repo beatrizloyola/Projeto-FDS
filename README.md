@@ -2,8 +2,7 @@
 
 Treinaí é uma aplicação web baseada em Python com Django para acompanhamento de treinos em desenvolvimento por estudantes da disciplina de Fundamentos de Desenvolvimento de Software da CESAR School.
 
-<details>
-<summary> ## Primeira entrega</summary>
+## Primeira entrega
   
 * [Figma](https://www.figma.com/design/a4XMSIZADPvGHmeOgjNQAR/Lo-Fi-Treina%C3%AD?node-id=0-1&t=etEegkhoiLEPXzsp-1)
 
@@ -16,7 +15,6 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 <img width="1873" height="955" alt="quadro1_sprint" src="https://github.com/user-attachments/assets/388ac153-011e-4721-802c-5e79483c6845" />
 
 * [Histórias](https://docs.google.com/document/d/1nskFYTLay5ukKv1aLaWjdS51-D0iQldLhl93W5BLoj8/edit?usp=sharing)
-</details>
 
 ## Segunda entrega
 
@@ -37,13 +35,16 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 
 * [Link do site na azure](https://treinai-c0grcmb8ahenb7eq.brazilsouth-01.azurewebsites.net)
 
+* [Update na protitpação das histórias](https://youtu.be/c7jyzcp53gI)
+> Também visível pelo figma
+
 ## Instruções de Acesso à Página no Azure
 
 1. Abra o navegador (Google Chrome, Firefox, Edge ou outro de sua preferência).
 
 2. Digite o endereço da página na barra de navegação:
 
-https://treinai-c0grcmb8ahenb7eq.brazilsouth-01.azurewebsites.net
+> https://treinai-c0grcmb8ahenb7eq.brazilsouth-01.azurewebsites.net
 
 3. Faça o cadastro (nome, senha, altura, peso, data de nascimento).
 
