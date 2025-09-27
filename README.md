@@ -17,7 +17,38 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 
 ## Segunda entrega
 
+* Backlog
+<img width="1919" height="1033" alt="quadro2_backlog" src="https://github.com/user-attachments/assets/a0478bd1-1077-42a1-9af1-4968724fc389" />
+
+* Sprint
+<img width="1919" height="1031" alt="quadro2_sprint" src="https://github.com/user-attachments/assets/c2838bcf-9c17-4c89-82ca-266ff55bc1f3" />
+
+* [Jira](https://cesar-team-ys52210m.atlassian.net/jira/software/projects/TREIN/boards/4?atlOrigin=eyJpIjoiYWJmZjdiYzdjNTcyNDk4NWI1ZWUwMDk5NjQ4N2M0YjgiLCJwIjoiaiJ9)
+
+* Bugtracker
+  <img width="1919" height="1034" alt="bugtracker" src="https://github.com/user-attachments/assets/6ca1d2ba-2493-4e82-b40f-a915c220c3d3"/>
+
+* [Relatório programação em par](https://docs.google.com/document/d/1fdD-QaiXSmVtaeB57ypChtCTnbF1S1TEWM8AG5SRYdY/edit?usp=sharing)
+
 * [Screencast histórias em produção (deploy)](https://www.youtube.com/watch?v=wNvsl2hhWSY)
+
+* [Link do site na azure](https://treinai-c0grcmb8ahenb7eq.brazilsouth-01.azurewebsites.net)
+
+## Instruções de Acesso à Página no Azure
+
+1. Abra o navegador (Google Chrome, Firefox, Edge ou outro de sua preferência).
+
+2. Digite o endereço da página na barra de navegação:
+
+https://treinai-c0grcmb8ahenb7eq.brazilsouth-01.azurewebsites.net
+
+3. Faça o cadastro (nome, senha, altura, peso, data de nascimento).
+
+4. Acesse sua conta
+
+5. Você verá a página inicial do seu site.
+
+OBS: Se aparecer alguma mensagem de segurança (HTTPS), confirme que deseja continuar — isso acontece se o certificado SSL ainda não estiver configurado corretamente.
 
 ## Membros
 
