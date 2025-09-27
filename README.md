@@ -24,13 +24,13 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 
 <details>
 
+* [Jira](https://cesar-team-ys52210m.atlassian.net/jira/software/projects/TREIN/boards/4?atlOrigin=eyJpIjoiYWJmZjdiYzdjNTcyNDk4NWI1ZWUwMDk5NjQ4N2M0YjgiLCJwIjoiaiJ9)
+
 * Backlog
 <img width="1919" height="1033" alt="quadro2_backlog" src="https://github.com/user-attachments/assets/a0478bd1-1077-42a1-9af1-4968724fc389" />
 
 * Sprint
 <img width="1919" height="1031" alt="quadro2_sprint" src="https://github.com/user-attachments/assets/c2838bcf-9c17-4c89-82ca-266ff55bc1f3" />
-
-* [Jira](https://cesar-team-ys52210m.atlassian.net/jira/software/projects/TREIN/boards/4?atlOrigin=eyJpIjoiYWJmZjdiYzdjNTcyNDk4NWI1ZWUwMDk5NjQ4N2M0YjgiLCJwIjoiaiJ9)
 
 * Bugtracker
   <img width="1919" height="1034" alt="bugtracker" src="https://github.com/user-attachments/assets/6ca1d2ba-2493-4e82-b40f-a915c220c3d3"/>
