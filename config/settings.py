@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-osjer&c)ccn&!8@#lwde=eq1_j%=_=f_mg=(nr3yy0%rb_5-&c'
+# Use env var in production; fallback only for local dev
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-only-unsafe-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() in {'1', 'true', 'yes'}
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Comma-separated list in DJANGO_ALLOWED_HOSTS, e.g.: "app.azurewebsites.net,localhost"
+_env_allowed = os.environ.get('DJANGO_ALLOWED_HOSTS', '')
+# ALLOWED_HOSTS = [h.strip() for h in _env_allowed.split(',') if h.strip()] if _env_allowed else []
+ALLOWED_HOSTS = [ 'localhost', '127.0.0.1' ]
+
+# CSRF trusted origins must be full origins with scheme; derive from ALLOWED_HOSTS
+# Example result: ["https://app.azurewebsites.net"]
+CSRF_TRUSTED_ORIGINS = [
+    (h if h.startswith('http://') or h.startswith('https://') else f'https://{h}')
+    for h in ALLOWED_HOSTS
+    if h and not h.startswith('.')
+]
 
 
 # Application definition
@@ -36,6 +50,7 @@ INSTALLED_APPS = [
     'treinos',
     'medalhas',
     'perfil',
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -127,6 +143,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+
+# Local onde collectstatic irá reunir os arquivos para produção
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise: servir arquivos estáticos em produção com cache e manifest
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
