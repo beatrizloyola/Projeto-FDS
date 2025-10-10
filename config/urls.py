@@ -25,6 +25,7 @@ urlpatterns = [
     path("", views.login_view, name="login"),
     path("cadastro/", cadastro_view, name="cadastro"),
     path("logout/", views.logout_view, name="logout"),
+    path("password_change/", views.password_change_request, name="password_change"),
 
     path("treinos/", include("treinos.urls")),
     path("medalhas/", include("medalhas.urls")),

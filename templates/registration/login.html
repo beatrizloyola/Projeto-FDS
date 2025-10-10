@@ -23,7 +23,7 @@
                 {% csrf_token %}
                 <input class="login-field" type="text" name="username" placeholder="Nome de usuário:" required>
                 <input class="login-field" type="password" name="password" placeholder="Senha:" required>
-                <a class="helper-link" href="#">Esqueceu sua Senha?</a>
+                <a class="helper-link" href="{% url 'password_change' %}">Esqueceu sua Senha?</a>
                 <button class="login-button" type="submit">Entrar</button>
             </form>
 
