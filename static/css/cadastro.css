@@ -1,0 +1,78 @@
+/* Reaproveitado de login.css com pequenos ajustes para cadastro */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: #e6e6e6;
+}
+
+.cadastro-container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cadastro-card {
+  width: 360px;
+  background: rgba(255,255,255,0.95);
+  padding: 28px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  border-radius: 4px;
+  text-align: center;
+}
+
+.cadastro-logo {
+  max-width: 520px;
+  width: 60%;
+  margin: 0 auto 6px auto;
+  display: block;
+}
+
+.cadastro-title {
+  font-size: 28px;
+  margin: 6px 0 6px 0;
+  color: #222;
+}
+
+.cadastro-subtitle {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.cadastro-field {
+  width: 100%;
+  padding: 8px 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.cadastro-button {
+  width: 100%;
+  padding: 10px 0;
+  margin-top: 12px;
+  background: #9c9c9c;
+  border: none;
+  color: #111;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary-button {
+  width: 100%;
+  padding: 10px 0;
+  margin-top: 8px;
+  background: #b3b3b3;
+  border: none;
+  color: #111;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .cadastro-card { width: 92%; padding: 18px; }
+  .cadastro-logo { width: 80%; }
+}
