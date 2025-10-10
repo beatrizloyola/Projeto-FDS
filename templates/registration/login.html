@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+        <title>Login</title>
+        <meta charset="utf-8">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
-    <h2>Entrar</h2>
+    <div class="login-container">
+        <div class="login-card">
+            <img class="login-logo" src="{% static 'img/LogoPreta.png' %}" alt="Treinaí">
+            <div class="login-title">Login</div>
     {% if messages %}
         <ul>
             {% for message in messages %}
@@ -13,17 +19,17 @@
         </ul>
     {% endif %}
 
-    <form method="POST">
-        {% csrf_token %}
-        <input type="text" name="username" placeholder="Usuário" required><br>
-        <input type="password" name="password" placeholder="Senha" required><br>
-        <button type="submit">Entrar</button>
-    </form>
+            <form method="POST">
+                {% csrf_token %}
+                <input class="login-field" type="text" name="username" placeholder="Nome de usuário:" required>
+                <input class="login-field" type="password" name="password" placeholder="Senha:" required>
+                <a class="helper-link" href="#">Esqueceu sua Senha?</a>
+                <button class="login-button" type="submit">Entrar</button>
+            </form>
 
-    <br>
-    <a href="{% url 'cadastro' %}">
-        <button type="button">Criar Conta</button>
-    </a>
+            <a href="{% url 'cadastro' %}"><button class="secondary-button" type="button">Cadastrar-se</button></a>
+        </div>
+    </div>
 
 </body>
 </html>
