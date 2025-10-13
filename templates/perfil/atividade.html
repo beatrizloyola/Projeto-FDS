@@ -98,4 +98,18 @@
   };
 </script>
 <script src="{% static 'js/grafico_atividade.js' %}"></script>
+<script>
+  (function(){
+    const container = document.querySelector('.objetivo-opcoes');
+    if (!container) return;
+    container.addEventListener('click', function(ev){
+      const label = ev.target.closest('.objetivo-item');
+      if (!label) return;
+      document.querySelectorAll('.objetivo-item').forEach(function(l){ l.classList.remove('ativo'); });
+      label.classList.add('ativo');
+      const r = label.querySelector('input[type="radio"]');
+      if (r) r.checked = true;
+    });
+  })();
+</script>
 {% endblock %}
