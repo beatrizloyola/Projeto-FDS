@@ -12,6 +12,13 @@ class Perfil(models.Model):
 
     altura_m = models.FloatField(null=True, blank=True)
     peso_kg = models.FloatField(null=True, blank=True)
+    
+    OBJETIVOS = (
+        ("GANHO", "Ganhar massa magra"),
+        ("PERDA", "Perder peso"),
+        ("MANUT", "Manter peso"),
+    )
+    objetivo = models.CharField(max_length=6, choices=OBJETIVOS, blank=True, default="")
 
     def __str__(self):
         return f"Perfil de {self.user.username}"

@@ -3,6 +3,40 @@ from django.shortcuts import render, redirect
 from perfil.models import Perfil, Atividade
 from django.utils import timezone
 from datetime import timedelta, date
+from treinos.models import Exercicio, Treino, TreinoExercicio
+
+
+def _parse_reps(value):
+	if isinstance(value, int):
+		return value
+	if value is None:
+		return 0
+	s = str(value)
+	for sep in ("–", "-", " "):
+		if sep in s:
+			parts = s.split(sep)
+			for p in parts:
+				p = p.strip()
+				if p.isdigit():
+					return int(p)
+	import re
+	m = re.search(r"(\d+)", s)
+	if m:
+		return int(m.group(1))
+	return 0
+
+
+def _create_scheme_for_user(user, scheme):
+	from django.db.models import Q
+	Treino.objects.filter(usuario=user).filter(
+		Q(nome__startswith="Push") | Q(nome__startswith="Pull") | Q(nome__startswith="Legs")
+	).delete()
+
+	for treino_nome, itens in scheme.items():
+		t = Treino.objects.create(usuario=user, nome=treino_nome)
+		for nome_ex, rep, desc in itens:
+			ex, _ = Exercicio.objects.get_or_create(nome=nome_ex)
+			TreinoExercicio.objects.create(treino=t, exercicio=ex, carga=1, repeticoes=_parse_reps(rep), descanso=_parse_reps(desc))
 
 
 def _classificar_imc(imc: float) -> str:
@@ -39,6 +73,92 @@ def atividade(request):
 			perfil.peso_kg = pes
 			perfil.save()
 			msg = "IMC atualizado com sucesso."
+		return redirect("atividade")
+
+	# atualizar objetivo
+	if request.method == "POST" and request.POST.get("acao") == "atualizar_objetivo":
+		obj = request.POST.get("objetivo")
+		if obj in ("GANHO", "PERDA", "MANUT"):
+			perfil.objetivo = obj
+			perfil.save()
+
+			user = request.user
+			if obj == "GANHO":
+				scheme = {
+					"Push (Hipertrofia)": [
+						("Supino reto com barra", 8, 90),
+						("Desenvolvimento com halteres", 10, 90),
+						("Crucifixo inclinado", 12, 60),
+						("Tríceps pulley", 12, 60),
+						("Elevação lateral", 15, 45),
+					],
+					"Pull (Hipertrofia)": [
+						("Barra fixa / Puxada na polia", 8, 90),
+						("Remada curvada com barra", 10, 90),
+						("Rosca direta", 12, 60),
+						("Face pull", 15, 45),
+						("Encolhimento de ombros", 12, 60),
+					],
+					"Legs (Hipertrofia)": [
+						("Agachamento livre", 8, 90),
+						("Leg press", 12, 90),
+						("Stiff", 10, 90),
+						("Extensão de quadríceps", 12, 60),
+						("Flexão de pernas (mesa flexora)", 12, 60),
+					],
+				}
+				_create_scheme_for_user(user, scheme)
+			elif obj == "PERDA":
+				scheme = {
+					"Push (Perda de peso)": [
+						("Supino reto com halteres", "15", "45"),
+						("Desenvolvimento militar", "12–15", "45"),
+						("Flexão de braços", "15–20", "30–45"),
+						("Tríceps testa", "12", "45"),
+						("Elevação lateral", "15", "30"),
+					],
+					"Pull (Perda de peso)": [
+						("Puxada na polia", "15", "45"),
+						("Remada baixa na polia", "15", "45"),
+						("Rosca martelo", "12–15", "45"),
+						("Face pull", "15", "30"),
+						("Remada alta com barra", "12", "45"),
+					],
+					"Legs (Perda de peso)": [
+						("Agachamento ou goblet squat", "15", "45–60"),
+						("Leg press", "15", "45–60"),
+						("Avanço (passada)", "12 cada perna", "45"),
+						("Stiff com halteres", "12–15", "45"),
+						("Elevação de panturrilha", "20", "30"),
+					],
+				}
+				_create_scheme_for_user(user, scheme)
+			elif obj == "MANUT":
+				scheme = {
+					"Push (Manutenção)": [
+						("Supino reto com halteres", "12", "60"),
+						("Desenvolvimento com barra", "12", "60"),
+						("Crucifixo", "15", "45–60"),
+						("Tríceps pulley", "12", "60"),
+						("Elevação lateral", "15", "45–60"),
+					],
+					"Pull (Manutenção)": [
+						("Puxada frontal", "12", "60"),
+						("Remada curvada com halteres", "12", "60"),
+						("Rosca direta", "12", "60"),
+						("Face pull", "15", "45–60"),
+						("Encolhimento de ombros", "15", "45–60"),
+					],
+					"Legs (Manutenção)": [
+						("Agachamento", "12", "60"),
+						("Leg press", "12", "60"),
+						("Stiff", "12", "60"),
+						("Extensão de pernas", "12", "60"),
+						("Flexão de pernas", "12", "60"),
+					],
+				}
+				_create_scheme_for_user(user, scheme)
+
 		return redirect("atividade")
 
 	atividades = Atividade.objects.filter(usuario=request.user)
