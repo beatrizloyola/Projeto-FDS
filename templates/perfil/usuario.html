@@ -6,8 +6,29 @@
         <a href="{% url 'usuario' %}" class="active">Usuário</a>
 </div>
 
-<div class="container">
-    <p>Configurações e informações do usuário...</p>
-    <p><a href="{% url 'login' %}">Sair</a></p>
+<div class="container perfil-usuario">
+    <div class="perfil-header">
+        <div class="perfil-foto">
+            {% if perfil.foto %}
+                <img src="{{ perfil.foto.url }}" alt="Foto do usuário" />
+            {% else %}
+                <div class="placeholder-foto"></div>
+            {% endif %}
+        </div>
+        <div class="perfil-info">
+            <h1>{{ request.user.get_full_name|default:request.user.username }}</h1>
+            <p>Idade: {% if idade is not None %}{{ idade }} anos{% else %}—{% endif %}</p>
+            <p>Peso: {% if peso %}{{ peso }} kg{% else %}—{% endif %}</p>
+            <p>Altura: {% if altura %}{{ altura }} m{% else %}—{% endif %}</p>
+            <p>Tempo de uso: {% if tempo_de_uso is not None %}{{ tempo_de_uso }} dias{% else %}—{% endif %}</p>
+        </div>
+    </div>
+
+    <div class="perfil-actions">
+        <a class="btn" href="{% url 'editar_usuario' %}"> Editar Informações</a>
+        <a class="btn" href="{% url 'password_change' %}"> Mudar a senha do Usuário</a>
+        <a class="btn" href="{% url 'logout' %}"> Sair</a>
+    </div>
+    
 </div>
 {% endblock %}

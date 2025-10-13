@@ -214,3 +214,122 @@ body {
 .new-treino-bar { margin-top:26px; text-align:center; width:100%; }
 .new-treino-btn { display:inline-flex; width:70px; height:70px; background:#666; border:3px solid #eee; align-items:center; justify-content:center; font-size:36px; font-weight:700; color:#eee; cursor:pointer; border-radius:10px; }
 .new-treino-btn:hover { background:#777; }
+
+/* ====== Perfil - estilo inspirado no mock ====== */
+.perfil-usuario {
+  --foto-size: 160px;
+  background: #e6e6e6;
+  padding: 28px;
+  border-radius: 6px;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 36px;
+  align-items: start;
+}
+
+.perfil-header {
+  grid-column: 1 / -1; /* header ocupa toda a largura do grid */
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  padding-bottom: 6px;
+}
+
+.perfil-foto {
+  width: var(--foto-size);
+  height: var(--foto-size);
+  min-width: var(--foto-size);
+  border-radius: 50%;
+  background: #cfcfcf;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 0 rgba(0,0,0,.06) inset;
+  border: 2px solid rgba(0,0,0,0.06);
+}
+
+.perfil-foto img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.placeholder-foto { width:100%; height:100%; border-radius:50%; background:#cfcfcf; display:flex; align-items:center; justify-content:center; }
+
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.perfil-info h1 {
+  margin: 0 0 8px 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #111;
+}
+
+.perfil-info p {
+  margin: 6px 0;
+  color: #222;
+  font-size: 15px;
+}
+
+/* ações empilhadas no lado esquerdo (segunda linha do grid, coluna 1) */
+.perfil-actions {
+  grid-column: 1; /* colocadas na coluna esquerda */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.perfil-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 260px;
+  padding: 12px 18px;
+  background: #bdbdbd;
+  color: #111;
+  text-decoration: none;
+  border: none;
+  border-radius: 2px;
+  font-weight: 600;
+  box-shadow: 0 1px 0 rgba(0,0,0,.06) inset;
+}
+
+.perfil-actions .btn:hover { background:#a9a9a9; }
+
+/* se houver uma coluna de controles à direita (notificações, metas) ela ficará aqui */
+.perfil-controls {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-self: start;
+}
+
+.perfil-controls label { font-weight:600; color:#111; margin-bottom:6px; }
+.perfil-controls input[type="text"], .perfil-controls input[type="time"], .perfil-controls input[type="number"] {
+  padding: 8px 10px;
+  border: 3px solid #cfcfcf;
+  background: #fff;
+  width: 320px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .perfil-usuario { grid-template-columns: 1fr; }
+  .perfil-actions { grid-column: 1; }
+  .perfil-header { flex-direction: row; }
+  .perfil-controls input[type="text"] { width: 100%; }
+}
+
+/* Editar usuário - layout centralizado e inputs largos */
+.editar-usuario-page { padding: 40px 0; display:flex; justify-content:center; }
+.editar-card { width: 420px; background: #e6e6e6; padding: 26px 28px; border-radius:4px; box-shadow: 0 2px 0 rgba(0,0,0,.06); }
+.editar-card h1 { margin:0 0 18px 0; font-size:20px; color:#222; text-align:left; }
+.editar-form { display:flex; flex-direction:column; gap:12px; }
+.editar-form label { font-size:13px; color:#333; font-weight:600; }
+.editar-form input[type="text"], .editar-form input[type="date"], .editar-form input[type="password"] { width:100%; padding:10px 8px; border: 3px solid #cfcfcf; background:#fff; box-sizing:border-box; }
+.editar-actions { margin-top:10px; display:flex; gap:12px; justify-content:center; }
+.btn-primary { background:#bdbdbd; color:#111; padding:8px 16px; border-radius:2px; text-decoration:none; border:0; font-weight:700; }
+.btn-primary:hover { background:#a9a9a9; }
+.btn-ghost { background:#bdbdbd; color:#111; padding:8px 16px; border-radius:2px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+.btn-ghost:hover { background:#a9a9a9; }

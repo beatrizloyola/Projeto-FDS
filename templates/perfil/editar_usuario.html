@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container editar-usuario-page">
+    <div class="editar-card">
+        <h1>Editar informações do usuário</h1>
+
+        {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="post" class="editar-form">
+            {% csrf_token %}
+            <label for="first_name">Nome de usuário:</label>
+            <input id="first_name" type="text" name="first_name" value="{{ request.user.first_name }}" />
+
+            <label for="password">Senha:</label>
+            <input id="password" type="password" name="password" value="" placeholder="(preencha apenas se quiser alterar)" />
+
+            <label for="data_nascimento">Data de nascimento:</label>
+            <input id="data_nascimento" type="date" name="data_nascimento" value="{% if request.user.data_nascimento %}{{ request.user.data_nascimento }}{% endif %}" />
+
+            <label for="altura">Altura:</label>
+            <input id="altura" type="text" name="altura" value="{% if request.user.altura %}{{ request.user.altura }}{% elif perfil.altura_m %}{{ perfil.altura_m }}{% endif %}" />
+
+            <label for="peso">Peso:</label>
+            <input id="peso" type="text" name="peso" value="{% if request.user.peso %}{{ request.user.peso }}{% elif perfil.peso_kg %}{{ perfil.peso_kg }}{% endif %}" />
+
+            <div class="editar-actions">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a class="btn btn-ghost" href="{% url 'usuario' %}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
