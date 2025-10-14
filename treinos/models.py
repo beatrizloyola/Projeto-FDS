@@ -3,6 +3,7 @@ from django.conf import settings
 
 class Exercicio(models.Model):
     nome = models.CharField(max_length=100)
+    gasto_kcal_por_hora = models.FloatField(null=True, blank=True, help_text="Gasto calórico médio por hora")
 
     def __str__(self):
         return self.nome

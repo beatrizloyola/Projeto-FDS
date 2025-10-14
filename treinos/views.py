@@ -4,6 +4,7 @@ from .models import Treino, Exercicio, TreinoExercicio
 from perfil.models import Atividade
 from django.contrib import messages
 from django.http import JsonResponse
+from django.db import models
 
 @login_required
 def treinos_view(request):
@@ -140,29 +141,60 @@ def listar_treinos_view(request):
         )
         .order_by("nome")
     )
-    # Mapear ids de treinos feitos hoje
     feitos_ids = set(
         Atividade.objects.filter(
             usuario=request.user, data__date=hoje
         ).values_list("treino_id", flat=True)
     )
     exercicios = Exercicio.objects.all().order_by("nome")
+    notificacao = request.session.pop('ultima_notificacao', None)
     return render(
         request,
         "treinos/listar_treinos.html",
-        {"treinos": treinos, "treinos_feitos_hoje": feitos_ids, "data_hoje": hoje, "exercicios": exercicios},
+        {"treinos": treinos, "treinos_feitos_hoje": feitos_ids, "data_hoje": hoje, "exercicios": exercicios, "notificacao": notificacao},
     )
 
 @login_required
 def concluir_treino_view(request, treino_id):
     treino = get_object_or_404(Treino, id=treino_id, usuario=request.user)
 
-    # Se o método for POST, o usuário confirmou no formulário
     if request.method == 'POST':
-        Atividade.objects.create(usuario=request.user, treino=treino)
-        messages.success(request, f"Parabéns! O treino '{treino.nome}' foi registrado no seu perfil.")
-        # Redireciona para a página de perfil (ou para onde fizer sentido)
+        itens = treino.itens.select_related('exercicio').all()
+        valores = [it.exercicio.gasto_kcal_por_hora for it in itens if it.exercicio.gasto_kcal_por_hora]
+        calorias = None
+        if valores:
+            import math
+            calorias = float(sum(valores)) / len(valores)
+            calorias = round(calorias, 0)
+
+        atividade = Atividade.objects.create(usuario=request.user, treino=treino, calorias_gastas=calorias)
+
+        progresso_text = ''
+        try:
+            perfil = request.user.perfil
+            if perfil.meta_calorias:
+                atividades_qs = Atividade.objects.filter(usuario=request.user).exclude(calorias_gastas__isnull=True)
+                try:
+                    if perfil.meta_set_at:
+                        atividades_qs = atividades_qs.filter(data__gte=perfil.meta_set_at)
+                except Exception:
+                    pass
+
+                total = atividades_qs.aggregate(total=models.Sum('calorias_gastas'))['total'] or 0
+                pct = int((total / perfil.meta_calorias) * 100) if perfil.meta_calorias else 0
+                if pct >= 100:
+                    progresso_text = " e meta atingida, escolha uma nova meta"
+                else:
+                    progresso_text = f" e já atingiu {pct}% da sua meta"
+        except Exception:
+            progresso_text = ''
+
+        if calorias:
+            texto = f"Parabéns! Você perdeu {int(calorias)}kcal nesse treino{progresso_text}."
+        else:
+            texto = f"Parabéns! O treino '{treino.nome}' foi registrado no seu perfil.{progresso_text}"
+
+        request.session['ultima_notificacao'] = {'texto': texto}
         return redirect('treinos')
 
-    # Se o método for GET, apenas mostre a página de confirmação
     return render(request, 'treinos/confirmar_conclusao.html', {'treino': treino})

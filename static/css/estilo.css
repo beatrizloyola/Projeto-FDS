@@ -296,6 +296,23 @@ body {
 
 .perfil-actions .btn:hover { background:#a9a9a9; }
 
+/* Make the save button in perfil-controls look like the left-side action buttons */
+.perfil-controls .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 260px;
+  padding: 12px 18px;
+  background: #bdbdbd;
+  color: #111;
+  text-decoration: none;
+  border: none;
+  border-radius: 2px;
+  font-weight: 600;
+  box-shadow: 0 1px 0 rgba(0,0,0,.06) inset;
+}
+.perfil-controls .btn:hover { background:#a9a9a9; }
+
 /* se houver uma coluna de controles à direita (notificações, metas) ela ficará aqui */
 .perfil-controls {
   grid-column: 2;
@@ -314,11 +331,23 @@ body {
   box-sizing: border-box;
 }
 
-@media (max-width: 900px) {
-  .perfil-usuario { grid-template-columns: 1fr; }
-  .perfil-actions { grid-column: 1; }
-  .perfil-header { flex-direction: row; }
-  .perfil-controls input[type="text"] { width: 100%; }
+.control-box {
+  display: flex;
+  align-items: stretch;
+  background: #e6e6e6; /* match perfil background */
+  border-radius: 4px;
+  box-shadow: none;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+.control-accent {
+  display: none; /* remove red accent bar per request */
+}
+.control-body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 /* Editar usuário - layout centralizado e inputs largos */

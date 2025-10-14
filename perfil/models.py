@@ -19,6 +19,8 @@ class Perfil(models.Model):
         ("MANUT", "Manter peso"),
     )
     objetivo = models.CharField(max_length=6, choices=OBJETIVOS, blank=True, default="")
+    meta_calorias = models.IntegerField(null=True, blank=True, help_text="Meta de calorias a perder")
+    meta_set_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Perfil de {self.user.username}"
@@ -31,6 +33,7 @@ class Atividade(models.Model):
     )
     treino = models.ForeignKey("treinos.Treino", on_delete=models.CASCADE)
     data = models.DateTimeField(auto_now_add=True)
+    calorias_gastas = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.usuario.username} concluiu {self.treino.nome} em {self.data:%d/%m/%Y}"

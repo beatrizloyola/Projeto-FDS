@@ -23,11 +23,37 @@
             <p>Tempo de uso: {% if tempo_de_uso is not None %}{{ tempo_de_uso }} dias{% else %}—{% endif %}</p>
         </div>
     </div>
-
     <div class="perfil-actions">
         <a class="btn" href="{% url 'editar_usuario' %}"> Editar Informações</a>
         <a class="btn" href="{% url 'password_change' %}"> Mudar a senha do Usuário</a>
         <a class="btn" href="{% url 'logout' %}"> Sair</a>
+    </div>
+
+    <div class="perfil-controls">
+        <form method="post" action="{% url 'usuario' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="salvar_meta" />
+
+            <div class="control-box">
+                <div class="control-accent"></div>
+                <div class="control-body">
+                    <label>Notificações</label>
+                    <input type="time" name="notificacao_horario" value="15:00" />
+                </div>
+            </div>
+
+            <div class="control-box">
+                <div class="control-accent"></div>
+                <div class="control-body">
+                    <label>Meta de calorias:</label>
+                    <input type="number" name="meta_calorias" value="{% if perfil.meta_calorias %}{{ perfil.meta_calorias }}{% else %}21000{% endif %}" />
+                </div>
+            </div>
+
+            <div style="margin-top:10px">
+                <button class="btn" type="submit">Salvar</button>
+            </div>
+        </form>
     </div>
     
 </div>
