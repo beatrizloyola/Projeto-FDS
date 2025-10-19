@@ -204,12 +204,25 @@
         method: 'POST',
         headers: { 'X-Requested-With':'XMLHttpRequest', 'X-CSRFToken': csrfToken },
         body: fd
-      }).then(r => { if(!r.ok) throw new Error('Erro ao salvar'); return r.json(); })
-        .then(data => {
+      }).then(async r => {
+        const text = await r.text().catch(() => '');
+        let json = {};
+        try{ json = text ? JSON.parse(text) : {}; }catch(e){ json = {}; }
+        if(!r.ok || (json && json.ok === false)){
+          if(json && json.redirect){ window.location.href = json.redirect; throw new Error(json.error || text || 'Erro ao salvar'); }
+          throw new Error(json.error || text || 'Erro ao salvar');
+        }
+        return json;
+      }).then(data => {
           if(!data.ok) throw new Error('Resposta inválida');
           if(isNovo){
             card.setAttribute('data-treino-id', data.treino.id);
             delete card.dataset.novo;
+            // update the title to the value returned by the server
+            const titleEl = card.querySelector('.treino-title');
+            if(titleEl && data.treino && data.treino.nome){
+              titleEl.textContent = data.treino.nome;
+            }
             const actions = document.createElement('div');
             actions.className = 'treino-actions';
             actions.innerHTML = `
@@ -248,7 +261,7 @@
         }).catch(err => {
           console.error(err);
           btn.disabled = false; btn.textContent = 'Salvar';
-          alert('Falha ao salvar exercícios.');
+          alert(err.message || 'Falha ao salvar exercícios.');
         });
     }
   });
