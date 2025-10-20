@@ -75,7 +75,6 @@ def atividade(request):
 			msg = "IMC atualizado com sucesso."
 		return redirect("atividade")
 
-	# atualizar objetivo
 	if request.method == "POST" and request.POST.get("acao") == "atualizar_objetivo":
 		obj = request.POST.get("objetivo")
 		if obj in ("GANHO", "PERDA", "MANUT"):

@@ -11,14 +11,11 @@ from django.contrib import messages
 def usuario_view(request):
     perfil, _ = Perfil.objects.get_or_create(user=request.user)
 
-    # receber POST da meta de calorias
     if request.method == 'POST' and request.POST.get('action') == 'salvar_meta':
         try:
             meta = request.POST.get('meta_calorias', '').strip()
-            # compare previous value so we only reset progress when the meta actually changes
             old_meta = perfil.meta_calorias
             perfil.meta_calorias = int(meta) if meta else None
-            # reset the 'meta_set_at' timestamp when the user changes the meta (or clear it when meta removed)
             if perfil.meta_calorias != old_meta:
                 if perfil.meta_calorias:
                     perfil.meta_set_at = timezone.now()
