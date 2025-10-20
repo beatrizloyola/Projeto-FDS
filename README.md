@@ -46,6 +46,28 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 
 </details>
 
+## Terceira entrega
+
+<details>
+
+* [Screencast das histórias em produção (deploy)](https://youtu.be/jcKH6bFveAU)
+
+* [Screencast do CI/CD com build e deployment automatizado](https://youtu.be/SnVr7qN5XIU)
+
+* [Screencast dos testes de sistema E2E](https://youtu.be/hNfr-u2HbyQ)
+
+* [Link do site na azure](treinai-c0grcmb8ahenb7eq.brazilsouth-01.azurewebsites.net)
+
+* [Relatório da programação em pares](https://docs.google.com/document/d/1A0s3Aya1NhzuH-3Q17jQE0ekMAcQqHCgDTuv_U1PevE/edit?usp=sharing)
+
+* Sprint
+
+> [Jira](https://cesar-team-ys52210m.atlassian.net/jira/software/projects/TREIN/boards/4?sprintStarted=true&atlOrigin=eyJpIjoiODU2MmU2MzIzYmU5NGZhNjlhMzFiZGJkYWVmZGU4ZmYiLCJwIjoiaiJ9)
+
+* Backlog
+
+> [Jira](https://cesar-team-ys52210m.atlassian.net/jira/software/projects/TREIN/boards/4?sprintStarted=true&atlOrigin=eyJpIjoiODU2MmU2MzIzYmU5NGZhNjlhMzFiZGJkYWVmZGU4ZmYiLCJwIjoiaiJ9)
+
 ## Instruções de Acesso à Página no Azure
 
 1. Abra o navegador (Google Chrome, Firefox, Edge ou outro de sua preferência).
