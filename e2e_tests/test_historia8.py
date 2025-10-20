@@ -19,7 +19,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 
-class TestHistoria4VisualizarAtividade(StaticLiveServerTestCase):
+class TestHistoria8MetaPerda(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -45,8 +45,8 @@ class TestHistoria4VisualizarAtividade(StaticLiveServerTestCase):
     def setUp(self):
         User = get_user_model()
         self.user, created = User.objects.get_or_create(
-            username="e2e_user_h4",
-            defaults={"email": "e2e_h4@example.com"},
+            username="e2e_user_h8",
+            defaults={"email": "e2e_h8@example.com"},
         )
         if created or not self.user.has_usable_password():
             self.user.set_password("S3nh@Fort3!")
@@ -55,17 +55,16 @@ class TestHistoria4VisualizarAtividade(StaticLiveServerTestCase):
         self.perfil, _ = Perfil.objects.get_or_create(user=self.user)
 
         self.url_treinos = reverse('treinos')
-        self.url_atividade = reverse('atividade')
 
     def _force_browser_login(self):
         client = Client()
         client.force_login(self.user)
-        client.get(self.url_atividade)
+        client.get(self.url_treinos)
         cookie_name = settings.SESSION_COOKIE_NAME
         sessionid = client.cookies[cookie_name].value
         csrftoken = client.cookies.get('csrftoken').value if client.cookies.get('csrftoken') else None
 
-        self.driver.get(self.live_server_url + self.url_atividade)
+        self.driver.get(self.live_server_url + self.url_treinos)
         try:
             self.driver.execute_script("document.cookie = arguments[0]", f"{cookie_name}={sessionid}; path=/")
             if csrftoken:
@@ -80,15 +79,23 @@ class TestHistoria4VisualizarAtividade(StaticLiveServerTestCase):
             except Exception:
                 pass
 
-    def _create_simple_treino(self, nome="Treino E2E"):
-        ex, _ = Exercicio.objects.get_or_create(nome="Exercicio E2E")
+    def _create_treino_with_gasto(self, nome, gasto):
+        ex, _ = Exercicio.objects.get_or_create(nome=f"Ex {nome}")
+        ex.gasto_kcal_por_hora = gasto
+        ex.save()
         treino = Treino.objects.create(usuario=self.user, nome=nome)
         TreinoExercicio.objects.create(treino=treino, exercicio=ex, carga=1, repeticoes=10, descanso=60)
         return treino
 
-    def test_cenario_1_treino_cadastrado_mostra_atividade(self):
-        """Cenário 1: Treino cadastrado e confirmado aparece no gráfico"""
-        treino = self._create_simple_treino('H4 Treino 1')
+    def test_cenario_1_meta_definida_e_treino_confirmado(self):
+        """Cenário 1: Meta definida e treino confirmado mostra calorias e progresso"""
+
+        from django.utils import timezone
+        self.perfil.meta_calorias = 875 
+        self.perfil.meta_set_at = timezone.now() - timezone.timedelta(days=1)
+        self.perfil.save()
+
+        treino = self._create_treino_with_gasto('H8 A', 350)
 
         self._force_browser_login()
         self.driver.get(self.live_server_url + self.url_treinos)
@@ -96,50 +103,53 @@ class TestHistoria4VisualizarAtividade(StaticLiveServerTestCase):
         card = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, f".treino-card[data-treino-id=\"{treino.id}\"]")))
         finish = card.find_element(By.CSS_SELECTOR, 'button.finish-box')
         finish.click()
-        try:
-            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.notificacao-topo')))
-        except Exception:
-            time.sleep(0.2)
 
-        self.driver.get(self.live_server_url + self.url_atividade)
-        self.wait.until(EC.presence_of_element_located((By.ID, 'graficoTreinos')))
-        labels = self.driver.execute_script('return window.__GRAFICO__ && window.__GRAFICO__.mensalLabels ? window.__GRAFICO__.mensalLabels : []')
-        values = self.driver.execute_script('return window.__GRAFICO__ && window.__GRAFICO__.mensalValues ? window.__GRAFICO__.mensalValues : []')
-        self.assertTrue(isinstance(values, list))
-        self.assertTrue(any(v for v in values), 'Chart values should contain at least one non-zero entry after confirming a treino')
+        note = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.notificacao-topo .notificacao-conteudo')))
+        text = note.text
+        self.assertIn('kcal', text)
+        self.assertIn('atingiu 40%', text)
 
-    def test_cenario_2_sem_treinos_confirmados_mostra_grafico_vazio(self):
-        """Cenário 2: sem treinos confirmados, gráfico vazio"""
-        Atividade.objects.filter(usuario=self.user).delete()
+    def test_cenario_2_meta_nao_definida(self):
+        """Cenário 2: Sem meta definida, apenas mostra calorias estimadas"""
+        self.perfil.meta_calorias = None
+        self.perfil.meta_set_at = None
+        self.perfil.save()
+
+        treino = self._create_treino_with_gasto('H8 B', 300)
 
         self._force_browser_login()
-        self.driver.get(self.live_server_url + self.url_atividade)
+        self.driver.get(self.live_server_url + self.url_treinos)
 
-        self.wait.until(EC.presence_of_element_located((By.ID, 'graficoTreinos')))
-        values = self.driver.execute_script('return window.__GRAFICO__ && window.__GRAFICO__.mensalValues ? window.__GRAFICO__.mensalValues : []')
-        if values:
-            self.assertFalse(any(v for v in values), 'Chart should be empty when no treinos confirmed')
+        card = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, f".treino-card[data-treino-id=\"{treino.id}\"]")))
+        finish = card.find_element(By.CSS_SELECTOR, 'button.finish-box')
+        finish.click()
 
-    def test_cenario_3_alterar_faixa_de_tempo_atualiza_dinamicamente(self):
-        """Cenário 3: trocar faixa entre anual e mensal atualiza o gráfico sem reload"""
-        treino = self._create_simple_treino('H4 Treino 2')
-        client = Client()
-        client.force_login(self.user)
-        client.post(reverse('concluir_treino', args=(treino.id,)), {})
+        note = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.notificacao-topo .notificacao-conteudo')))
+        text = note.text
+        self.assertIn('kcal', text)
+        self.assertNotIn('atingiu', text)
+        self.assertNotIn('meta atingida', text)
+
+    def test_cenario_3_meta_atingida(self):
+        """Cenário 3: Confirma treino que atinge/ultrapassa a meta e mostra conclusão"""
+        from django.utils import timezone
+        self.perfil.meta_calorias = 400
+        self.perfil.meta_set_at = timezone.now() - timezone.timedelta(days=7)
+        self.perfil.save()
+
+        prior_treino = Treino.objects.create(usuario=self.user, nome='Prior H8')
+        Atividade.objects.create(usuario=self.user, treino=prior_treino, calorias_gastas=300)
+
+        treino = self._create_treino_with_gasto('H8 C', 150)
 
         self._force_browser_login()
-        self.driver.get(self.live_server_url + self.url_atividade)
+        self.driver.get(self.live_server_url + self.url_treinos)
 
-        self.wait.until(EC.presence_of_element_located((By.ID, 'graficoTreinos')))
-        mensal_values = self.driver.execute_script('return window.__GRAFICO__.mensalValues')
-        anual_values = self.driver.execute_script('return window.__GRAFICO__.anualValues')
+        card = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, f".treino-card[data-treino-id=\"{treino.id}\"]")))
+        finish = card.find_element(By.CSS_SELECTOR, 'button.finish-box')
+        finish.click()
 
-        anual_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.tab-btn[data-chart="anual"]')))
-        anual_btn.click()
-        time.sleep(0.2)
-        self.assertTrue('ativo' in anual_btn.get_attribute('class'))
-
-        mensal_btn = self.driver.find_element(By.CSS_SELECTOR, '.tab-btn[data-chart="mensal"]')
-        mensal_btn.click()
-        time.sleep(0.2)
-        self.assertTrue('ativo' in mensal_btn.get_attribute('class'))
+        note = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.notificacao-topo .notificacao-conteudo')))
+        text = note.text
+        self.assertIn('meta atingida', text)
+        self.assertIn('kcal', text)

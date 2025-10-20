@@ -24,7 +24,7 @@ class TestTreinosE2E(StaticLiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         chrome_options = Options()
-        chrome_options.add_argument("--headless=new")
+        # chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--window-size=1280,900")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
@@ -208,19 +208,11 @@ class TestTreinosE2E(StaticLiveServerTestCase):
 
         self._submit_form()
 
+
         try:
-            cards = WebDriverWait(self.driver, 15).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.treino-card[data-treino-id]'))
+            WebDriverWait(self.driver, 15).until(
+                lambda d: len(d.find_elements(By.XPATH, f"//h4[contains(normalize-space(.), \"{nome_unico}\")]")) > 0
             )
-            found = None
-            for c in cards:
-                try:
-                    if nome_unico in c.get_attribute('innerText'):
-                        found = c
-                        break
-                except Exception:
-                    continue
-            assert found is not None, f"Nome do treino não encontrado em nenhum card. Primeiro card text: {cards[0].get_attribute('innerText') if cards else ''}"
         except Exception as ex:
             page = self.driver.page_source
             raise AssertionError(f"Treino não apareceu na listagem após salvar. Erro: {ex}\nPágina:\n{page}")

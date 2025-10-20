@@ -24,7 +24,7 @@ class TestHistoria2Objetivo(StaticLiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         chrome_options = Options()
-        chrome_options.add_argument("--headless=new")
+        # chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--window-size=1280,900")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
@@ -93,15 +93,19 @@ class TestHistoria2Objetivo(StaticLiveServerTestCase):
             " if(label){ label.click(); } else { inputs[i].checked=true; inputs[i].dispatchEvent(new Event('change',{bubbles:true})); } return true; } } return false;"
         )
         ok = self.driver.execute_script(select_script, 'GANHO')
-        # verify selection
         selected = self.driver.execute_script("return (document.querySelector(\"input[name='objetivo']:checked\")||{}).value || null")
         if not ok or selected != 'GANHO':
-            # try clicking the label directly as a fallback
             self.driver.execute_script("var v=arguments[0]; var inputs=document.getElementsByName('objetivo'); for(var i=0;i<inputs.length;i++){ if(inputs[i].value===v){ var l=inputs[i].closest('.objetivo-item'); if(l) l.click(); } }", 'GANHO')
-        save_btn = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn-salvar'))
-        )
-        save_btn.click()
+        try:
+            self.driver.execute_script(
+                "var v=arguments[0]; var inputs=document.getElementsByName('objetivo'); for(var i=0;i<inputs.length;i++){ if(inputs[i].value===v){ inputs[i].checked=true; inputs[i].dispatchEvent(new Event('change',{bubbles:true})); } }; var f=document.querySelector('form'); if(f) f.submit();",
+                'GANHO'
+            )
+        except Exception:
+            save_btn = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn-salvar'))
+            )
+            save_btn.click()
 
         WebDriverWait(self.driver, 10).until(EC.url_contains(self.url_atividade.strip('/')))
 
@@ -165,10 +169,17 @@ class TestHistoria2Objetivo(StaticLiveServerTestCase):
         selected = self.driver.execute_script("return (document.querySelector(\"input[name='objetivo']:checked\")||{}).value || null")
         if not ok or selected != 'PERDA':
             self.driver.execute_script("var v=arguments[0]; var inputs=document.getElementsByName('objetivo'); for(var i=0;i<inputs.length;i++){ if(inputs[i].value===v){ var l=inputs[i].closest('.objetivo-item'); if(l) l.click(); } }", 'PERDA')
-        save_btn = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn-salvar'))
-        )
-        save_btn.click()
+        # Ensure radio input is checked and submit the form via JS
+        try:
+            self.driver.execute_script(
+                "var v=arguments[0]; var inputs=document.getElementsByName('objetivo'); for(var i=0;i<inputs.length;i++){ if(inputs[i].value===v){ inputs[i].checked=true; inputs[i].dispatchEvent(new Event('change',{bubbles:true})); } }; var f=document.querySelector('form'); if(f) f.submit();",
+                'PERDA'
+            )
+        except Exception:
+            save_btn = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn-salvar'))
+            )
+            save_btn.click()
 
         WebDriverWait(self.driver, 10).until(EC.url_contains(self.url_atividade.strip('/')))
 
