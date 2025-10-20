@@ -56,7 +56,7 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 
 * [Screencast dos testes de sistema E2E](https://youtu.be/hNfr-u2HbyQ)
 
-* [Link do site na azure](treinai-c0grcmb8ahenb7eq.brazilsouth-01.azurewebsites.net)
+* [Link do site na azure](https://treinai-c0grcmb8ahenb7eq.brazilsouth-01.azurewebsites.net)
 
 * [Relatório da programação em pares](https://docs.google.com/document/d/1A0s3Aya1NhzuH-3Q17jQE0ekMAcQqHCgDTuv_U1PevE/edit?usp=sharing)
 
