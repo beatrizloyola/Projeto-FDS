@@ -55,8 +55,8 @@
       <p>{{ msg }}</p>
     {% else %}
       <div class="imc-resultado">
-        <p>Altura: {{ perfil.altura_m }} m</p>
-        <p>Peso: {{ perfil.peso_kg }} kg</p>
+  <p>Altura: {% if altura_m_display %}{{ altura_m_display }}{% else %}{{ perfil.altura_m }}{% endif %} m</p>
+  <p>Peso: {% if peso_kg_display %}{{ peso_kg_display }}{% else %}{{ perfil.peso_kg }}{% endif %} kg</p>
         <p>
           Resultado:
           {% if imc %}

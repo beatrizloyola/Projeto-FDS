@@ -17,19 +17,22 @@
         <form method="post" class="editar-form">
             {% csrf_token %}
             <label for="first_name">Nome de usuário:</label>
-            <input id="first_name" type="text" name="first_name" value="{{ request.user.first_name }}" />
+            <input id="first_name" type="text" name="first_name" value="{% if first_name %}{{ first_name }}{% else %}{{ request.user.first_name }}{% endif %}" />
+
+            <label for="last_name">Sobrenome:</label>
+            <input id="last_name" type="text" name="last_name" value="{% if last_name %}{{ last_name }}{% else %}{{ request.user.last_name }}{% endif %}" />
 
             <label for="password">Senha:</label>
             <input id="password" type="password" name="password" value="" placeholder="(preencha apenas se quiser alterar)" />
 
             <label for="data_nascimento">Data de nascimento:</label>
-            <input id="data_nascimento" type="date" name="data_nascimento" value="{% if request.user.data_nascimento %}{{ request.user.data_nascimento }}{% endif %}" />
+            <input id="data_nascimento" type="date" name="data_nascimento" value="{% if data_nascimento %}{{ data_nascimento }}{% elif request.user.data_nascimento %}{{ request.user.data_nascimento }}{% endif %}" />
 
             <label for="altura">Altura:</label>
-            <input id="altura" type="text" name="altura" value="{% if request.user.altura %}{{ request.user.altura }}{% elif perfil.altura_m %}{{ perfil.altura_m }}{% endif %}" />
+            <input id="altura" type="text" name="altura" value="{% if altura %}{{ altura }}{% elif request.user.altura %}{{ request.user.altura }}{% elif perfil.altura_m %}{{ perfil.altura_m }}{% endif %}" />
 
             <label for="peso">Peso:</label>
-            <input id="peso" type="text" name="peso" value="{% if request.user.peso %}{{ request.user.peso }}{% elif perfil.peso_kg %}{{ perfil.peso_kg }}{% endif %}" />
+            <input id="peso" type="text" name="peso" value="{% if peso %}{{ peso }}{% elif request.user.peso %}{{ request.user.peso }}{% elif perfil.peso_kg %}{{ perfil.peso_kg }}{% endif %}" />
 
             <div class="editar-actions">
                 <button type="submit" class="btn btn-primary">Salvar</button>
@@ -38,4 +41,46 @@
         </form>
     </div>
 </div>
+<script>
+;(function(){
+    const form = document.querySelector('.editar-form');
+    if (!form) return;
+    const alturaInput = form.querySelector('input[name="altura"]');
+    const pesoInput = form.querySelector('input[name="peso"]');
+
+    function showInlineError(msg){
+        let el = document.querySelector('.inline-error');
+        if (!el){
+            el = document.createElement('div');
+            el.className = 'inline-error';
+            el.style.color = '#b00020';
+            el.style.marginTop = '8px';
+            form.insertBefore(el, form.firstChild);
+        }
+        el.textContent = msg;
+    }
+
+    form.addEventListener('submit', function(e){
+        const prev = document.querySelector('.inline-error');
+        if (prev) prev.remove();
+
+        const altura = alturaInput ? alturaInput.value.trim() : '';
+        const peso = pesoInput ? pesoInput.value.trim() : '';
+
+        if (!altura || !peso){
+            e.preventDefault();
+            showInlineError('Por favor, preencha todos os campos obrigatórios para calcular seu IMC, gasto calórico e ingestão de água.');
+            return;
+        }
+
+        const a = parseFloat(altura.replace(',','.'));
+        const p = parseFloat(peso.replace(',','.'));
+        if (!(isFinite(a) && a > 0) || !(isFinite(p) && p > 0)){
+            e.preventDefault();
+            showInlineError('Os valores são inválidos. Por favor, revise os campos e tente novamente.');
+            return;
+        }
+    });
+})();
+</script>
 {% endblock %}

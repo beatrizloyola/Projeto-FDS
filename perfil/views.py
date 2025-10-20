@@ -64,7 +64,6 @@ def editar_usuario(request):
     perfil, _ = Perfil.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        # update basic user fields
         first_name = request.POST.get("first_name", "").strip()
         last_name = request.POST.get("last_name", "").strip()
         data_nascimento = request.POST.get("data_nascimento", "").strip()
@@ -76,29 +75,77 @@ def editar_usuario(request):
         if last_name is not None:
             request.user.last_name = last_name
 
-        # Attempt to parse and save numeric fields safely
-        try:
-            if peso:
-                request.user.peso = float(peso)
-        except Exception:
-            messages.warning(request, "Peso inválido; use ponto como separador decimal.")
+        invalid_msg = "Os valores são inválidos. Por favor, revise os campos e tente novamente."
+        required_msg = "Por favor, preencha todos os campos obrigatórios para calcular seu IMC, gasto calórico e ingestão de água."
+
+        parsed_peso = None
+        parsed_altura = None
+        invalid = False
+
+        if peso:
+            try:
+                parsed_peso = float(peso)
+                if parsed_peso <= 0:
+                    invalid = True
+            except Exception:
+                invalid = True
+
+        if altura:
+            try:
+                parsed_altura = float(altura.replace(',','.'))
+                if parsed_altura > 10:
+                    parsed_altura = round(parsed_altura / 100.0, 2)
+                if parsed_altura <= 0:
+                    invalid = True
+            except Exception:
+                invalid = True
+
+        if not peso or not altura:
+            messages.error(request, required_msg)
+            contexto = {
+                'perfil': perfil,
+                'first_name': first_name,
+                'last_name': last_name,
+                'data_nascimento': data_nascimento,
+                'altura': altura,
+                'peso': peso,
+            }
+            return render(request, "perfil/editar_usuario.html", contexto)
+
+        if invalid:
+            messages.error(request, invalid_msg)
+            contexto = {
+                'perfil': perfil,
+                'first_name': first_name,
+                'last_name': last_name,
+                'data_nascimento': data_nascimento,
+                'altura': altura,
+                'peso': peso,
+            }
+            return render(request, "perfil/editar_usuario.html", contexto)
 
         try:
-            if altura:
-                request.user.altura = float(altura)
+            if parsed_peso is not None:
+                request.user.peso = parsed_peso
+            if parsed_altura is not None:
+                request.user.altura = parsed_altura
         except Exception:
-            messages.warning(request, "Altura inválida; use ponto como separador decimal.")
-
-        # save data_nascimento if the CustomUser has the field
+            pass
         try:
             if data_nascimento:
-                # expect YYYY-MM-DD from the form
                 from datetime import datetime
                 request.user.data_nascimento = datetime.strptime(data_nascimento, "%Y-%m-%d").date()
         except Exception:
             messages.warning(request, "Data de nascimento inválida. Use AAAA-MM-DD.")
 
         request.user.save()
+        try:
+            if parsed_peso is not None:
+                perfil.peso_kg = parsed_peso
+            if parsed_altura is not None:
+                perfil.altura_m = parsed_altura
+        except Exception:
+            pass
         perfil.save()
         messages.success(request, "Informações atualizadas com sucesso.")
         return redirect("usuario")

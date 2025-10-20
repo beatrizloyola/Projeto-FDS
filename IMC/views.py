@@ -62,7 +62,11 @@ def atividade(request):
 		alt = (request.POST.get("altura_m") or "").replace(",", ".")
 		pes = (request.POST.get("peso_kg") or "").replace(",", ".")
 		try:
-			alt = round(float(alt), 2)
+			alt = float(alt)
+			if alt > 10:
+				alt = round(alt / 100.0, 2)
+			else:
+				alt = round(alt, 2)
 			pes = round(float(pes), 1)
 			if alt <= 0 or pes <= 0:
 				raise ValueError
@@ -192,17 +196,39 @@ def atividade(request):
 	gasto_calorico = None
 	agua_recomendada = None
 
+	# Prepare safe display and calculation values for altura/peso.
+	altura_m_display = None
+	peso_kg_display = None
+
 	if perfil.altura_m is None or perfil.peso_kg is None:
 		if not msg:
 			msg = "Por favor, complete seus dados de altura e peso no perfil."
-	elif perfil.altura_m <= 0 or perfil.peso_kg <= 0:
-		msg = "Altura e peso inválidos. Atualize suas informações no perfil."
 	else:
-		imc = float(perfil.peso_kg) / (float(perfil.altura_m) ** 2)
-		classificacao = _classificar_imc(imc)
-		tmb = 370 + (21.6 * float(perfil.peso_kg))
-		gasto_calorico = round(tmb * 1.55, 0)
-		agua_recomendada = round(float(perfil.peso_kg) * 35 / 1000, 2)
+		# normalize stored altura: if it looks like centimeters (e.g. 150), convert to meters
+		try:
+			raw_alt = float(perfil.altura_m)
+			if raw_alt > 10:
+				altura_m_display = round(raw_alt / 100.0, 2)
+			else:
+				altura_m_display = round(raw_alt, 2)
+		except Exception:
+			altura_m_display = None
+
+		try:
+			peso_kg_display = float(perfil.peso_kg)
+		except Exception:
+			peso_kg_display = None
+
+		if altura_m_display is None or peso_kg_display is None:
+			msg = "Altura e peso inválidos. Atualize suas informações no perfil."
+		elif altura_m_display <= 0 or peso_kg_display <= 0:
+			msg = "Altura e peso inválidos. Atualize suas informações no perfil."
+		else:
+			imc = float(peso_kg_display) / (float(altura_m_display) ** 2)
+			classificacao = _classificar_imc(imc)
+			tmb = 370 + (21.6 * float(peso_kg_display))
+			gasto_calorico = round(tmb * 1.55, 0)
+			agua_recomendada = round(float(peso_kg_display) * 35 / 1000, 2)
 
 	contexto = {
 		"atividades": atividades,
@@ -211,6 +237,8 @@ def atividade(request):
 		"classificacao_imc": classificacao,
 		"gasto_calorico": gasto_calorico,
 		"agua_recomendada": agua_recomendada,
+		"altura_m_display": altura_m_display,
+		"peso_kg_display": peso_kg_display,
 		"msg": msg,
 		"grafico_mensal_labels": semanas_labels,
 		"grafico_mensal_values": semanas_values,

@@ -81,7 +81,6 @@ class TestHistoria4VisualizarAtividade(StaticLiveServerTestCase):
                 pass
 
     def _create_simple_treino(self, nome="Treino E2E"):
-        # Create a treino with one exercise so we can conclude it via POST
         ex, _ = Exercicio.objects.get_or_create(nome="Exercicio E2E")
         treino = Treino.objects.create(usuario=self.user, nome=nome)
         TreinoExercicio.objects.create(treino=treino, exercicio=ex, carga=1, repeticoes=10, descanso=60)
@@ -91,37 +90,26 @@ class TestHistoria4VisualizarAtividade(StaticLiveServerTestCase):
         """Cenário 1: Treino cadastrado e confirmado aparece no gráfico"""
         treino = self._create_simple_treino('H4 Treino 1')
 
-        # login in browser and go to treinos page
         self._force_browser_login()
         self.driver.get(self.live_server_url + self.url_treinos)
 
-        # find the treino card and click the finish (submit) button
         card = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, f".treino-card[data-treino-id=\"{treino.id}\"]")))
-        # find finish button inside the card and click it
         finish = card.find_element(By.CSS_SELECTOR, 'button.finish-box')
         finish.click()
-        # wait for the treinos page to reflect the action (notification or redirect)
         try:
-            # server sets a session notification that renders .notificacao-topo on the treinos page
             self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.notificacao-topo')))
         except Exception:
-            # fallback: wait for the card to have class 'done' indicating it was marked
             time.sleep(0.2)
 
-        # navigate to activity page and assert chart has data (non-empty labels/values)
         self.driver.get(self.live_server_url + self.url_atividade)
-        # wait for chart canvas
         self.wait.until(EC.presence_of_element_located((By.ID, 'graficoTreinos')))
-        # read window.__GRAFICO__ dataset
         labels = self.driver.execute_script('return window.__GRAFICO__ && window.__GRAFICO__.mensalLabels ? window.__GRAFICO__.mensalLabels : []')
         values = self.driver.execute_script('return window.__GRAFICO__ && window.__GRAFICO__.mensalValues ? window.__GRAFICO__.mensalValues : []')
-        # at least one non-zero value expected
         self.assertTrue(isinstance(values, list))
         self.assertTrue(any(v for v in values), 'Chart values should contain at least one non-zero entry after confirming a treino')
 
     def test_cenario_2_sem_treinos_confirmados_mostra_grafico_vazio(self):
         """Cenário 2: sem treinos confirmados, gráfico vazio"""
-        # ensure user has no atividades
         Atividade.objects.filter(usuario=self.user).delete()
 
         self._force_browser_login()
@@ -129,13 +117,11 @@ class TestHistoria4VisualizarAtividade(StaticLiveServerTestCase):
 
         self.wait.until(EC.presence_of_element_located((By.ID, 'graficoTreinos')))
         values = self.driver.execute_script('return window.__GRAFICO__ && window.__GRAFICO__.mensalValues ? window.__GRAFICO__.mensalValues : []')
-        # expect all zeros or empty
         if values:
             self.assertFalse(any(v for v in values), 'Chart should be empty when no treinos confirmed')
 
     def test_cenario_3_alterar_faixa_de_tempo_atualiza_dinamicamente(self):
         """Cenário 3: trocar faixa entre anual e mensal atualiza o gráfico sem reload"""
-        # create and confirm a treino so chart has data
         treino = self._create_simple_treino('H4 Treino 2')
         client = Client()
         client.force_login(self.user)
@@ -145,20 +131,14 @@ class TestHistoria4VisualizarAtividade(StaticLiveServerTestCase):
         self.driver.get(self.live_server_url + self.url_atividade)
 
         self.wait.until(EC.presence_of_element_located((By.ID, 'graficoTreinos')))
-        # ensure default monthly is active
         mensal_values = self.driver.execute_script('return window.__GRAFICO__.mensalValues')
         anual_values = self.driver.execute_script('return window.__GRAFICO__.anualValues')
 
-        # click anual button
         anual_btn = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.tab-btn[data-chart="anual"]')))
         anual_btn.click()
-        # small pause for chart redraw (chart animation disabled but DOM changes occur)
         time.sleep(0.2)
-        # read currently rendered labels via Chart.js instance by accessing the canvas chart object
-        # the page doesn't expose chart instance globally; instead verify that the anual tab has ativo class and that mensal vs anual arrays differ
         self.assertTrue('ativo' in anual_btn.get_attribute('class'))
 
-        # click mensal again and verify it becomes active
         mensal_btn = self.driver.find_element(By.CSS_SELECTOR, '.tab-btn[data-chart="mensal"]')
         mensal_btn.click()
         time.sleep(0.2)
