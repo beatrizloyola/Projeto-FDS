@@ -68,6 +68,10 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 
 > [Jira](https://cesar-team-ys52210m.atlassian.net/jira/software/projects/TREIN/boards/4?sprintStarted=true&atlOrigin=eyJpIjoiODU2MmU2MzIzYmU5NGZhNjlhMzFiZGJkYWVmZGU4ZmYiLCJwIjoiaiJ9)
 
+* Bugtracker Atualizado:
+<img width="1919" height="1079" alt="e3_bugtracker" src="https://github.com/user-attachments/assets/0eadc430-f1f7-46e8-826e-f3617e569a30" />
+
+
 ## Instruções de Acesso à Página no Azure
 
 1. Abra o navegador (Google Chrome, Firefox, Edge ou outro de sua preferência).
