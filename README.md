@@ -73,6 +73,7 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 * Bugtracker Atualizado:
 <img width="1919" height="1079" alt="e3_bugtracker" src="https://github.com/user-attachments/assets/0eadc430-f1f7-46e8-826e-f3617e569a30" />
 
+</details>
 
 ## Instruções de Acesso à Página no Azure
 
