@@ -54,7 +54,7 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 
 * [Screencast do CI/CD com build e deployment automatizado](https://youtu.be/xd7aVNyGLK4)
 
-* [Screencast dos testes de sistema E2E](https://youtu.be/hNfr-u2HbyQ)
+* [Screencast dos testes de sistema E2E](https://youtu.be/4ihilq4EM2c)
 
 * [Link do site na azure](https://treinai-c0grcmb8ahenb7eq.brazilsouth-01.azurewebsites.net)
 
