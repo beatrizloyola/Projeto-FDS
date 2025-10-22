@@ -38,7 +38,7 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 * [Relatório programação em par](https://docs.google.com/document/d/1fdD-QaiXSmVtaeB57ypChtCTnbF1S1TEWM8AG5SRYdY/edit?usp=sharing)
 
 * [Update na protitpação das histórias](https://youtu.be/c7jyzcp53gI)
- > Também visível pelo figma
+ > Também visível pelo figma.
 
 * [Screencast histórias em produção (deploy)](https://www.youtube.com/watch?v=wNvsl2hhWSY)
 
