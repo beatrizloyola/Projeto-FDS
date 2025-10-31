@@ -5,11 +5,40 @@ from datetime import date
 from perfil.models import Perfil
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.core.files.base import ContentFile
+from io import BytesIO
+from PIL import Image
 
 
 @login_required
 def usuario_view(request):
     perfil, _ = Perfil.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST' and request.POST.get('action') == 'upload_foto':
+        uploaded = request.FILES.get('foto')
+        if uploaded:
+            try:
+                image = Image.open(uploaded)
+                image = image.convert('RGB')
+                w, h = image.size
+                min_dim = min(w, h)
+                left = (w - min_dim) // 2
+                top = (h - min_dim) // 2
+                image = image.crop((left, top, left + min_dim, top + min_dim))
+                size = 512
+                image = image.resize((size, size), Image.LANCZOS)
+                buffer = BytesIO()
+                image.save(buffer, format='JPEG', quality=85)
+                content = ContentFile(buffer.getvalue())
+                filename = f"perfil/{request.user.username}_foto.jpg"
+                perfil.foto.save(filename, content, save=False)
+                perfil.save()
+                messages.success(request, 'Foto de perfil atualizada com sucesso.')
+            except Exception:
+                messages.error(request, 'Falha ao processar a foto. Tente um arquivo menor ou outro formato.')
+        else:
+            messages.error(request, 'Nenhum arquivo enviado.')
+        return redirect('usuario')
 
     if request.method == 'POST' and request.POST.get('action') == 'salvar_meta':
         try:

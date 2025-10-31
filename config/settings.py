@@ -25,13 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-only-unsafe-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() in {'1', 'true', 'yes'}
-# DEBUG = True
+# DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() in {'1', 'true', 'yes'}
+DEBUG = True
 
 # Comma-separated list in DJANGO_ALLOWED_HOSTS, e.g.: "app.azurewebsites.net,localhost"
 _env_allowed = os.environ.get('DJANGO_ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = [h.strip() for h in _env_allowed.split(',') if h.strip()] if _env_allowed else []
-# ALLOWED_HOSTS = [ 'localhost', '127.0.0.1' ]
+# ALLOWED_HOSTS = [h.strip() for h in _env_allowed.split(',') if h.strip()] if _env_allowed else []
+ALLOWED_HOSTS = [ 'localhost', '127.0.0.1' ]
 
 # CSRF trusted origins must be full origins with scheme; derive from ALLOWED_HOSTS
 # Example result: ["https://app.azurewebsites.net"]
@@ -149,6 +149,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # WhiteNoise: servir arquivos estáticos em produção com cache e manifest
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Media files (user uploaded)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

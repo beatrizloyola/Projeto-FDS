@@ -8,13 +8,21 @@
 
 <div class="container perfil-usuario">
     <div class="perfil-header">
-        <div class="perfil-foto">
-            {% if perfil.foto %}
-                <img src="{{ perfil.foto.url }}" alt="Foto do usuário" />
-            {% else %}
-                <div class="placeholder-foto"></div>
-            {% endif %}
-        </div>
+                <div class="perfil-foto">
+                        <form id="foto-form" method="post" action="{% url 'usuario' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="upload_foto" />
+                                <label for="foto-input" class="foto-label">
+                                    {% if perfil.foto %}
+                                        <img id="perfil-img" src="{{ perfil.foto.url }}" alt="Foto do usuário" />
+                                    {% else %}
+                                        <div id="perfil-img" class="placeholder-foto"></div>
+                                    {% endif %}
+                                    <input id="foto-input" type="file" name="foto" accept="image/*" />
+                                    <span class="camera-overlay" aria-hidden="true">📷</span>
+                                </label>
+                        </form>
+                </div>
         <div class="perfil-info">
             <h1>{{ request.user.get_full_name|default:request.user.username }}</h1>
             <p>Idade: {% if idade is not None %}{{ idade }} anos{% else %}—{% endif %}</p>
@@ -57,4 +65,53 @@
     </div>
     
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const input = document.getElementById('foto-input');
+    const form = document.getElementById('foto-form');
+    const img = document.getElementById('perfil-img');
+    if (!input) return;
+    const label = document.querySelector('.foto-label');
+    input.addEventListener('change', function(e){
+        const file = this.files && this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(ev){
+                if (img.tagName.toLowerCase() === 'img') {
+                    img.src = ev.target.result;
+                } else {
+                    const newImg = document.createElement('img');
+                    newImg.id = 'perfil-img';
+                    newImg.src = ev.target.result;
+                    newImg.alt = 'Foto do usuário';
+                    newImg.style.width = '100%';
+                    newImg.style.height = '100%';
+                    newImg.style.objectFit = 'cover';
+                    newImg.style.objectPosition = 'center';
+                    newImg.style.borderRadius = '50%';
+                    newImg.style.display = 'block';
+                    img.replaceWith(newImg);
+                }
+            };
+            reader.readAsDataURL(file);
+            form.submit();
+        }
+    });
+    if (label) {
+        label.setAttribute('tabindex', '0');
+        label.setAttribute('role', 'button');
+
+
+        label.addEventListener('keydown', function(e){
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                try { input.click(); } catch(err) { /* ignore */ }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

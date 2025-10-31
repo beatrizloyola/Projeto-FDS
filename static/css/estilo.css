@@ -251,6 +251,54 @@ body {
 .perfil-foto img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
 .placeholder-foto { width:100%; height:100%; border-radius:50%; background:#cfcfcf; display:flex; align-items:center; justify-content:center; }
 
+/* Make the whole photo area clickable for file upload */
+.perfil-foto .foto-label {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.perfil-foto .foto-label input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  pointer-events: auto;
+}
+
+.perfil-foto .camera-overlay {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  padding: 6px;
+  border-radius: 50%;
+  font-size: 14px;
+  z-index: 3;
+  display: none;
+}
+
+.perfil-foto .foto-label:hover .camera-overlay,
+.perfil-foto .foto-label:focus-within .camera-overlay {
+  display: block;
+}
+
+/* Ensure the visible image/placeholder do not intercept clicks */
+.perfil-foto img,
+.perfil-foto .placeholder-foto {
+  pointer-events: none;
+}
+
 .perfil-info {
   display: flex;
   flex-direction: column;
