@@ -51,11 +51,21 @@ def usuario_view(request):
                 else:
                     perfil.meta_set_at = None
 
+            notificacao = request.POST.get('notificacao_horario', '').strip()
+            if notificacao:
+                try:
+                    from datetime import datetime
+                    perfil.notificacao_horario = datetime.strptime(notificacao, "%H:%M").time()
+                except Exception:
+                    perfil.notificacao_horario = None
+            else:
+                perfil.notificacao_horario = None
+
             perfil.save()
             if perfil.meta_calorias != old_meta:
                 messages.success(request, 'Meta de calorias salva. Progresso reiniciado.')
             else:
-                messages.success(request, 'Meta de calorias salva.')
+                messages.success(request, 'Configurações salvas com sucesso.')
         except Exception:
             messages.error(request, 'Valor de meta inválido.')
         return redirect('usuario')

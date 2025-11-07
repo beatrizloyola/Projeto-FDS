@@ -196,7 +196,6 @@ def atividade(request):
 	gasto_calorico = None
 	agua_recomendada = None
 
-	# Prepare safe display and calculation values for altura/peso.
 	altura_m_display = None
 	peso_kg_display = None
 
@@ -204,7 +203,6 @@ def atividade(request):
 		if not msg:
 			msg = "Por favor, complete seus dados de altura e peso no perfil."
 	else:
-		# normalize stored altura: if it looks like centimeters (e.g. 150), convert to meters
 		try:
 			raw_alt = float(perfil.altura_m)
 			if raw_alt > 10:

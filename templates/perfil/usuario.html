@@ -46,7 +46,7 @@
                 <div class="control-accent"></div>
                 <div class="control-body">
                     <label>Notificações</label>
-                    <input type="time" name="notificacao_horario" value="15:00" />
+                    <input id="notificacao-input" type="time" name="notificacao_horario" value="{% if perfil.notificacao_horario %}{{ perfil.notificacao_horario|time:"H:i" }}{% else %}15:00{% endif %}" />
                 </div>
             </div>
 
@@ -113,5 +113,75 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
 });
+</script>
+<script>
+(function(){
+    const notifInput = document.getElementById('notificacao-input');
+    if (!notifInput) return;
+    if (!('Notification' in window)) {
+        console.log('Notifications not supported in this browser');
+        return;
+    }
+
+    let notifTimer = null;
+
+    function computeDelayForTime(timeStr) {
+        try {
+            const parts = timeStr.split(':').map(s => parseInt(s, 10));
+            if (parts.length < 2 || isNaN(parts[0]) || isNaN(parts[1])) return null;
+            const now = new Date();
+            const next = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parts[0], parts[1], 0, 0);
+            if (next <= now) next.setDate(next.getDate() + 1);
+            return next - now;
+        } catch (err) {
+            return null;
+        }
+    }
+
+    function scheduleFromInput() {
+        if (notifTimer) {
+            clearTimeout(notifTimer);
+            notifTimer = null;
+        }
+        const timeStr = notifInput.value;
+        if (!timeStr) return;
+        const delay = computeDelayForTime(timeStr);
+        if (delay === null) return;
+        // ensure permission
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission().then(function(result){
+                if (result === 'granted') scheduleFromInput();
+            });
+            return;
+        }
+
+        notifTimer = setTimeout(function(){
+            try {
+                new Notification('Hora de treinar!', { body: 'Hora de treinar! É hora de completar seu treino.' });
+            } catch (err) {
+                console.warn('Failed to show notification', err);
+            }
+            scheduleFromInput();
+        }, delay);
+        console.log('Scheduled notification in', delay, 'ms (for', timeStr, ')');
+    }
+
+    try {
+        if (Notification.permission === 'default') {
+            Notification.requestPermission().then(function(result){
+                if (result === 'granted') scheduleFromInput();
+            });
+        } else if (Notification.permission === 'granted') {
+            scheduleFromInput();
+        }
+    } catch (err) {
+        console.warn('Notification setup error', err);
+    }
+
+    notifInput.addEventListener('change', function(){
+        scheduleFromInput();
+    });
+
+})();
 </script>
 {% endblock %}

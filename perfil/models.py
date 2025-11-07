@@ -21,6 +21,7 @@ class Perfil(models.Model):
     objetivo = models.CharField(max_length=6, choices=OBJETIVOS, blank=True, default="")
     meta_calorias = models.IntegerField(null=True, blank=True, help_text="Meta de calorias a perder")
     meta_set_at = models.DateTimeField(null=True, blank=True)
+    notificacao_horario = models.TimeField(null=True, blank=True, help_text="Horário diário para notificações")
 
     def __str__(self):
         return f"Perfil de {self.user.username}"
