@@ -1,8 +1,41 @@
 {% extends "base.html" %}
 
-{% block title %}Medalhas{% endblock %}
-
 {% block content %}
-<h2>Página de Medalhas</h2>
-<p>Conteúdo da página de medalhas...</p>
+<div class="container">
+  <h1>Minhas medalhas</h1>
+  <div class="medals-row earned-row">
+    {% if earned %}
+      {% for item in earned %}
+        <div class="medal-tile">
+          {% if item.medal.image %}
+            <img src="{{ item.medal.image.url }}" alt="{{ item.medal.name }}" />
+          {% else %}
+            <div class="medal-placeholder"></div>
+          {% endif %}
+          <div class="medal-name">{{ item.medal.name }}</div>
+          <div class="medal-sub">Conquistada em {{ item.earned_at|date:"d/m/Y" }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>Você ainda não conquistou medalhas — continue treinando!</p>
+    {% endif %}
+  </div>
+
+  <h2>Outras medalhas</h2>
+  <div class="medals-row locked-row">
+    {% for item in locked %}
+      <div class="medal-tile locked">
+        {% if item.medal.image %}
+          <img src="{{ item.medal.image.url }}" alt="{{ item.medal.name }}" />
+        {% else %}
+          <div class="medal-placeholder"></div>
+        {% endif %}
+        <div class="medal-name">{{ item.medal.name }}</div>
+        <div class="medal-sub">{{ item.progress }}% de progresso</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}
+
+{% block extra_scripts %}{% endblock %}

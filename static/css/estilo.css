@@ -393,3 +393,14 @@ body {
 .btn-primary:hover { background:#a9a9a9; }
 .btn-ghost { background:#bdbdbd; color:#111; padding:8px 16px; border-radius:2px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
 .btn-ghost:hover { background:#a9a9a9; }
+
+/* Medalhas page styles */
+.medals-row { display:flex; gap:28px; flex-wrap:wrap; margin:14px 0 36px; }
+.medal-tile { width:140px; text-align:center; }
+.medal-tile img, .medal-placeholder { width:140px; height:140px; border-radius:50%; background:#cfcfcf; display:inline-block; box-shadow:0 2px 0 rgba(0,0,0,.06) inset; }
+.medal-tile.locked img, .medal-tile.locked .medal-placeholder { filter:grayscale(80%); opacity:0.7; }
+.medal-name { margin-top:10px; font-weight:700; }
+.medal-sub { font-size:13px; color:#666; margin-top:4px; }
+
+.earned-row { margin-bottom:28px; }
+.locked-row { margin-top:12px; }
