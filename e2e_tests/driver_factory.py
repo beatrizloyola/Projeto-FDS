@@ -1,5 +1,6 @@
 import os
 from selenium import webdriver
+from selenium.common import exceptions as _selenium_exceptions
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import os as _os
@@ -30,8 +31,14 @@ def create_driver(options):
             def get(self, url):
                 if url is None:
                     return self._driver.get(url)
-                rewritten = url.replace('localhost', 'host.docker.internal').replace('127.0.0.1', 'host.docker.internal')
-                return self._driver.get(rewritten)
+                try:
+                    return self._driver.get(url)
+                except _selenium_exceptions.WebDriverException as exc:
+                    msg = str(exc)
+                    if 'ERR_CONNECTION_REFUSED' in msg or 'ERR_NAME_NOT_RESOLVED' in msg or 'net::ERR_CONNECTION_REFUSED' in msg or 'net::ERR_NAME_NOT_RESOLVED' in msg:
+                        rewritten = url.replace('localhost', 'host.docker.internal').replace('127.0.0.1', 'host.docker.internal')
+                        return self._driver.get(rewritten)
+                    raise
 
             def __getattr__(self, name):
                 return getattr(self._driver, name)
