@@ -13,8 +13,7 @@ def create_driver(options):
     """
     remote = os.environ.get('SELENIUM_REMOTE_URL')
     if remote:
-        caps = options.to_capabilities()
-        return webdriver.Remote(command_executor=remote, desired_capabilities=caps)
+        return webdriver.Remote(command_executor=remote, options=options)
 
     service = Service(ChromeDriverManager().install())
     return webdriver.Chrome(service=service, options=options)
