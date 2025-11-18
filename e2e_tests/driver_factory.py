@@ -2,6 +2,7 @@ import os
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+import os as _os
 
 
 def create_driver(options):
@@ -13,7 +14,29 @@ def create_driver(options):
     """
     remote = os.environ.get('SELENIUM_REMOTE_URL')
     if remote:
-        return webdriver.Remote(command_executor=remote, options=options)
+        remote_driver = webdriver.Remote(command_executor=remote, options=options)
+
+        class HostRewriteWebDriver:
+            """Proxy WebDriver that rewrites localhost URLs to host.docker.internal.
+
+            It forwards all attribute access to the underlying driver but overrides
+            `get()` to rewrite the target host when running against a remote
+            Selenium service (CI).
+            """
+
+            def __init__(self, driver):
+                self._driver = driver
+
+            def get(self, url):
+                if url is None:
+                    return self._driver.get(url)
+                rewritten = url.replace('localhost', 'host.docker.internal').replace('127.0.0.1', 'host.docker.internal')
+                return self._driver.get(rewritten)
+
+            def __getattr__(self, name):
+                return getattr(self._driver, name)
+
+        return HostRewriteWebDriver(remote_driver)
 
     service = Service(ChromeDriverManager().install())
     return webdriver.Chrome(service=service, options=options)
