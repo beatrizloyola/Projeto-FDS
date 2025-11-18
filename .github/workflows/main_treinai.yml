@@ -34,7 +34,7 @@ jobs:
       - name: Install system dependencies for headless browser
         run: |
           sudo apt-get update
-          sudo apt-get install -y chromium-browser fonts-liberation
+          sudo apt-get install -y chromium-browser chromium-chromedriver fonts-liberation
 
       - name: Run Django migrations (for tests)
         run: |

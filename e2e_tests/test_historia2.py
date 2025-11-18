@@ -1,4 +1,5 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -21,6 +22,8 @@ class Historia2E2ETests(StaticLiveServerTestCase):
         options.add_argument('--disable-gpu')
         options.add_argument('--disable-extensions')
         options.add_argument('--window-size=1200,900')
+        if os.environ.get('CHROME_BIN'):
+            options.binary_location = os.environ['CHROME_BIN']
         cls.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         cls.driver.implicitly_wait(10)
 

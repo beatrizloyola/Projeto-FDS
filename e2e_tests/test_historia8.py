@@ -1,5 +1,6 @@
 import time
 from urllib.parse import urlparse
+import os
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -24,11 +25,13 @@ class TestHistoria8MetaPerda(StaticLiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         chrome_options = Options()
-        # chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--window-size=1280,900")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        if os.environ.get('CHROME_BIN'):
+            chrome_options.binary_location = os.environ['CHROME_BIN']
         cls.driver = webdriver.Chrome(
             service=ChromeService(ChromeDriverManager().install()),
             options=chrome_options,
