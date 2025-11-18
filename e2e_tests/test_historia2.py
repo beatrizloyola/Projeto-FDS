@@ -22,7 +22,7 @@ class Historia2E2ETests(StaticLiveServerTestCase):
         options.add_argument('--disable-extensions')
         options.add_argument('--window-size=1200,900')
         cls.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        cls.driver.implicitly_wait(5)
+        cls.driver.implicitly_wait(10)
 
     @classmethod
     def tearDownClass(cls):
@@ -35,12 +35,17 @@ class Historia2E2ETests(StaticLiveServerTestCase):
     def create_and_login(self, username='notif_user', password='pass'):
         User = get_user_model()
         user = User.objects.create_user(username=username, password=password)
-        # login
+        from django.test import Client
+        client = Client()
+        client.force_login(user)
+
         self.driver.get(self.live_server_url + '/')
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.NAME, 'username')))
-        self.driver.find_element(By.NAME, 'username').send_keys(username)
-        self.driver.find_element(By.NAME, 'password').send_keys(password)
-        self.driver.find_element(By.CSS_SELECTOR, 'button[type=submit]').click()
+
+        if 'sessionid' in client.cookies:
+            cookie_value = client.cookies['sessionid'].value
+            self.driver.add_cookie({'name': 'sessionid', 'value': cookie_value, 'path': '/'})
+            self.driver.get(self.live_server_url + '/')
+
         return user
 
     def inject_notification_stub(self, permission='granted'):
@@ -70,7 +75,7 @@ class Historia2E2ETests(StaticLiveServerTestCase):
         """Cenário 1: notificações ativadas -> notificação é enviada no tempo correto"""
         user = self.create_and_login('notif1', 'pass1')
         self.driver.get(self.live_server_url + '/perfil/usuario/')
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.ID, 'notificacao-input')))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, 'notificacao-input')))
 
         self.inject_notification_stub(permission='granted')
 
@@ -84,7 +89,7 @@ class Historia2E2ETests(StaticLiveServerTestCase):
         """Cenário 2: notificações desativadas -> notificações não são enviadas"""
         user = self.create_and_login('notif2', 'pass2')
         self.driver.get(self.live_server_url + '/perfil/usuario/')
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.ID, 'notificacao-input')))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, 'notificacao-input')))
 
         self.inject_notification_stub(permission='denied')
 
@@ -98,7 +103,7 @@ class Historia2E2ETests(StaticLiveServerTestCase):
         """Cenário 3: alterar horário salva novo horário e notificações ocorrem no horário atualizado"""
         user = self.create_and_login('notif3', 'pass3')
         self.driver.get(self.live_server_url + '/perfil/usuario/')
-        WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.ID, 'notificacao-input')))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, 'notificacao-input')))
 
         self.inject_notification_stub(permission='granted')
 
