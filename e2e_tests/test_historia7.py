@@ -31,7 +31,8 @@ class Historia7E2ETests(StaticLiveServerTestCase):
         options.add_argument('--window-size=1400,900')
         if os.environ.get('CHROME_BIN'):
             options.binary_location = os.environ['CHROME_BIN']
-        cls.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        from .driver_factory import create_driver
+        cls.driver = create_driver(options)
         cls.driver.implicitly_wait(5)
 
     @classmethod

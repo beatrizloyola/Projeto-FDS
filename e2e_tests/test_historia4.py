@@ -32,10 +32,8 @@ class TestHistoria4VisualizarAtividade(StaticLiveServerTestCase):
         chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
         if os.environ.get('CHROME_BIN'):
             chrome_options.binary_location = os.environ['CHROME_BIN']
-        cls.driver = webdriver.Chrome(
-            service=ChromeService(ChromeDriverManager().install()),
-            options=chrome_options,
-        )
+        from .driver_factory import create_driver
+        cls.driver = create_driver(chrome_options)
         cls.wait = WebDriverWait(cls.driver, 10)
 
     @classmethod

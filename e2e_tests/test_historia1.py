@@ -30,13 +30,10 @@ class TestTreinosE2E(StaticLiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
-        # If CI provides CHROME_BIN, use it (set in workflow)
         if os.environ.get('CHROME_BIN'):
             chrome_options.binary_location = os.environ['CHROME_BIN']
-        cls.driver = webdriver.Chrome(
-            service=ChromeService(ChromeDriverManager().install()),
-            options=chrome_options,
-        )
+        from .driver_factory import create_driver
+        cls.driver = create_driver(chrome_options)
         cls.wait = WebDriverWait(cls.driver, 10)
 
     @classmethod
