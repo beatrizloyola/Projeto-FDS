@@ -51,10 +51,11 @@ jobs:
           CI: true
           SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
           DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,host.docker.internal,172.17.0.1"
+          DJANGO_LIVE_TEST_SERVER_ADDRESS: "0.0.0.0:8081"
         run: |
           source antenv/bin/activate
           # Run the entire e2e_tests module (includes História 2 and História 7)
-          python manage.py test e2e_tests -v 2 --liveserver=0.0.0.0:8081
+          python manage.py test e2e_tests -v 2
                 
       # By default, when you enable GitHub CI/CD integration through the Azure portal, the platform automatically sets the SCM_DO_BUILD_DURING_DEPLOYMENT application setting to true. This triggers the use of Oryx, a build engine that handles application compilation and dependency installation (e.g., pip install) directly on the platform during deployment. Hence, we exclude the antenv virtual environment directory from the deployment artifact to reduce the payload size. 
       - name: Upload artifact for deployment jobs
