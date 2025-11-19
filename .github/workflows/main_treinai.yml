@@ -20,6 +20,7 @@ jobs:
         image: selenium/standalone-chrome:latest
         ports:
           - 4444:4444
+        options: --add-host=host.docker.internal:host-gateway
 
     steps:
       - uses: actions/checkout@v4
@@ -50,6 +51,7 @@ jobs:
         env:
           CI: true
           SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
+          SELENIUM_HOST_REWRITE: host.docker.internal
           DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,host.docker.internal,172.17.0.1"
           DJANGO_LIVE_TEST_SERVER_ADDRESS: "0.0.0.0:8081"
         run: |
