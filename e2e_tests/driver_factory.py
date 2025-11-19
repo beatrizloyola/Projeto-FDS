@@ -18,11 +18,16 @@ def create_driver(options):
         remote_driver = webdriver.Remote(command_executor=remote, options=options)
 
         class HostRewriteWebDriver:
-            """Proxy WebDriver that rewrites localhost URLs to host.docker.internal.
+            """Proxy WebDriver that retries URL loads with host rewrites.
 
-            It forwards all attribute access to the underlying driver but overrides
-            `get()` to rewrite the target host when running against a remote
-            Selenium service (CI).
+            Behavior:
+            - Try the original URL first.
+            - On known network errors (connection refused / name not resolved),
+              attempt a sequence of rewrites and retry each one.
+            - The sequence uses an optional env var `SELENIUM_HOST_REWRITE` (can
+              be an IP or hostname), then `host.docker.internal`, then
+              `172.17.0.1` (common Docker gateway). This makes CI more robust
+              across runners and Docker setups.
             """
 
             def __init__(self, driver):
@@ -31,14 +36,32 @@ def create_driver(options):
             def get(self, url):
                 if url is None:
                     return self._driver.get(url)
+
                 try:
                     return self._driver.get(url)
                 except _selenium_exceptions.WebDriverException as exc:
                     msg = str(exc)
-                    if 'ERR_CONNECTION_REFUSED' in msg or 'ERR_NAME_NOT_RESOLVED' in msg or 'net::ERR_CONNECTION_REFUSED' in msg or 'net::ERR_NAME_NOT_RESOLVED' in msg:
-                        rewritten = url.replace('localhost', 'host.docker.internal').replace('127.0.0.1', 'host.docker.internal')
-                        return self._driver.get(rewritten)
-                    raise
+                    known = ('ERR_CONNECTION_REFUSED', 'ERR_NAME_NOT_RESOLVED', 'net::ERR_CONNECTION_REFUSED', 'net::ERR_NAME_NOT_RESOLVED')
+                    if not any(token in msg for token in known):
+                        raise
+
+                    candidates = []
+                    env_host = os.environ.get('SELENIUM_HOST_REWRITE')
+                    if env_host:
+                        candidates.append(env_host)
+                    candidates.extend(['host.docker.internal', '172.17.0.1'])
+
+                    last_exc = exc
+                    for host in candidates:
+                        rewritten = url.replace('localhost', host).replace('127.0.0.1', host)
+                        try:
+                            print(f"[e2e] host rewrite attempt: {url} -> {rewritten}")
+                            return self._driver.get(rewritten)
+                        except _selenium_exceptions.WebDriverException as exc2:
+                            last_exc = exc2
+                            continue
+
+                    raise last_exc
 
             def __getattr__(self, name):
                 return getattr(self._driver, name)
