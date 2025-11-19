@@ -15,12 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read #This is required for actions/checkout
-    services:
-      selenium:
-        image: selenium/standalone-chrome:latest
-        ports:
-          - 4444:4444
-        options: --add-host=host.docker.internal:host-gateway
+    # No selenium service: run Chrome/chromedriver directly on the runner
 
     steps:
       - uses: actions/checkout@v4
@@ -50,8 +45,7 @@ jobs:
       - name: Run E2E tests (full e2e_tests module)
         env:
           CI: true
-          SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
-          SELENIUM_HOST_REWRITE: host.docker.internal
+          # Run LiveServer on all interfaces so local Chrome can connect
           DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,host.docker.internal,172.17.0.1"
           DJANGO_LIVE_TEST_SERVER_ADDRESS: "0.0.0.0:8081"
         run: |
