@@ -75,6 +75,35 @@ Treinaí é uma aplicação web baseada em Python com Django para acompanhamento
 
 </details>
 
+## Quarta entrega
+
+<details>
+
+* [Screencast das histórias em produção (deploy)](https://www.youtube.com/watch?v=0gj-OUVlkVw)
+
+* [Screencast do CI/CD com build e deployment automatizado](https://www.youtube.com/watch?v=bQB3_OrhnFw)
+
+* [Screencast dos testes de sistema E2E](https://www.youtube.com/watch?v=xK3SallRFWY)
+
+* [Link do site na azure](https://treinai-c0grcmb8ahenb7eq.brazilsouth-01.azurewebsites.net)
+
+* [Relatório da programação em pares](https://docs.google.com/document/d/13Ltdejr5uQ8ie9ZayJPVytWJI2j0SxEareGE6tJ-ei4/edit?tab=t.0)
+
+* Sprint
+<img width="1879" height="1033" alt="e4_board" src="https://github.com/user-attachments/assets/9f25a948-17e9-4ffd-a79e-a57043fc548c" />
+
+> [Jira](https://cesar-team-ys52210m.atlassian.net/jira/software/projects/TREIN/boards/4?sprintStarted=true&atlOrigin=eyJpIjoiODU2MmU2MzIzYmU5NGZhNjlhMzFiZGJkYWVmZGU4ZmYiLCJwIjoiaiJ9)
+
+* Backlog
+<img width="1877" height="1029" alt="e4_backlog" src="https://github.com/user-attachments/assets/b35fd9a0-fc10-45a2-861a-cfa73b6df1cc" />
+
+> [Jira](https://cesar-team-ys52210m.atlassian.net/jira/software/projects/TREIN/boards/4?sprintStarted=true&atlOrigin=eyJpIjoiODU2MmU2MzIzYmU5NGZhNjlhMzFiZGJkYWVmZGU4ZmYiLCJwIjoiaiJ9)
+
+* Bugtracker Atualizado:
+<img width="1863" height="1026" alt="e4_bugtracker" src="https://github.com/user-attachments/assets/d0b10086-d977-43c1-b5e3-a4aa10fc4715" />
+
+</details>
+
 ## Instruções de Acesso à Página no Azure
 
 1. Abra o navegador (Google Chrome, Firefox, Edge ou outro de sua preferência).
