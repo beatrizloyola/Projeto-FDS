@@ -15,11 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read #This is required for actions/checkout
-    services:
-      selenium:
-        image: selenium/standalone-chrome:latest
-        ports:
-          - 4444:4444
 
     steps:
       - uses: actions/checkout@v4
@@ -49,7 +44,6 @@ jobs:
       - name: Run E2E tests (full e2e_tests module)
         env:
           CI: true
-          SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
         run: |
           source antenv/bin/activate
           # Run the entire e2e_tests module (includes História 2 and História 7)
