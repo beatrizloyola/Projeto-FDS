@@ -1,6 +1,13 @@
 # Treinaí
 
-Treinaí é uma aplicação web baseada em Python com Django para acompanhamento de treinos em desenvolvimento por estudantes da disciplina de Fundamentos de Desenvolvimento de Software da CESAR School.
+Treinaí é uma aplicação web baseada em Python com Django no back-end e auxiliada por JS no front-end para acompanhamento de treinos. Em desenvolvimento por estudantes da disciplina de Fundamentos de Desenvolvimento de Software da CESAR School, ela contém as seguintes funcionalidades:
+
+- Cadastro, exclusão e edição de treínos.
+- Sistema de notificação que lembra o usuário de treinar.
+- Seleção de objetivo do usuário com treinos adequados para cada um deles.
+- Acompanhamento da frequência de exercício do usuário em faixas de tempos mensais e diárias.
+- Cálculo de IMC e gasto calórico médio.
+- Sistema "gameficado" de medalhas com a intenção de incentivar o usuário a treinar.
 
 ## Primeira entrega
 
